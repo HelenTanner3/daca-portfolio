@@ -1,1 +1,2 @@
-# NÄDAL 2 - SQL Cleaning -  DELETE, UPDATE, COALESCE, turvakoopia loomine, CASE WHEN
+# NÄDAL 2 - SQL Cleaning 
+DELETE, UPDATE, COALESCE, turvakoopia loomine, CASE WHEN
