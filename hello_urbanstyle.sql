@@ -1,6 +1,6 @@
 -- Minu esimene UrbanStyle paring
 -- Nimi: [Helen Tanner]
--- Kuupaev: [Tanane kuupäev]
+-- Kuupaev: [20.06.2026]
 
 -- Loo meeskonnaliikmete tabel
 CREATE TABLE IF NOT EXISTS team_members (
