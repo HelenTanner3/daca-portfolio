@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS team_members (
 
 -- Lisa minu andmed
 INSERT INTO team_members (name, role, week)
-VALUES ('[Sinu Nimi]', 'Andmeanaluutik', 0);
+VALUES ('Helen Tanner', 'Andmeanaluutik', 0);
 
 -- Vaata tulemust
 SELECT * FROM team_members ORDER BY joined_at;
