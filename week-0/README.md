@@ -12,11 +12,11 @@ Seadistatud ja aktiivselt kasutatud:
 - **GitHub** — versioonihaldus ja portfoolio
 - **Git** — lokaalne versioonihaldus
 - **VS Code** — koodiredaktor (ühendatud Supabase'iga)
-- **Python** — installitud ja ühendatud
 - **NotebookLM** — AI õppekaaslane RAG failidega
 - **Claude** ja **ChatGPT** — AI abistavad tööriistad
 
 Alla laaditud, kuid veel aktiivselt mitte kasutatud:
+- **Python** — installitud ja ühendatud
 - **Power BI** — visualiseerimistööriist (Track A)
 
 ## Isiklik töö
