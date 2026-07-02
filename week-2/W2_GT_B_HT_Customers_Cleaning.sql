@@ -1,221 +1,219 @@
 -- ============================================================
--- DACA Nädal 1 — UrbanStyle.ltd
--- Roll A: Müügiandmete uurija
+-- DACA Nädal 2 — UrbanStyle.ltd
+-- Organisatsioon: Operatsioonid
+-- Roll B: Kliendiandmete puhastaja (Customer Data Cleaner)
 
 -- Autor:      Helen Tanner
--- Kuupäev:    25.06.2026
+-- Kuupäev:    02.07.2026
 -- Andmebaas:  Supabase / PostgreSQL
--- Tabel:      sales
+-- Tabel:      customers (Supabase)
 
--- Eesmärk:
--- Kontrollida müügiandmete kvaliteeti enne nende kasutamist ärianalüüsis ja aruandluses.
+/* 
+KONTEKST:
+IT-juht Toomas Kask on tuvastanud kliendiandmetes olulisi puudujääke: 
+duplikaatsed e-mailid, puuduvad kontaktandmed ja ebakorrektsed linnanimed.
+Minu ülesanne on need vead tuvastada, dokumenteerida ja luua puhastusplaan.
 
--- Kontekst:
--- IT-juht Toomas Kask kahtlustab, et andmestikus võib esineda kvaliteediprobleeme. 
--- Käesolev analüüs kontrollib peamisi riske ja dokumenteerib leitud probleemid.
--- ============================================================
+METOODIKA: Test → Verify → Log → Commit
+Kõik muudatused tehakse esmalt test-koopias (customers_test),
+et algandmed jääksid puutumatuks.
+*/
 
--- ============================================================
--- 1. TABELI MAHT
--- Mitu müügitehingut on sales tabelis?
--- ============================================================
--- Annab ettekujutuse andmestiku suurusest ja võimaldab hiljem
--- võrrelda, kui suur osa ridadest läbib erinevaid filtreid.
-
-SELECT COUNT(*) AS müügitehingute_arv
-FROM sales;
-
--- Tulemus:
--- 15 234 müügitehingut
-
--- Järeldus:
--- Andmestik on piisava mahuga esmaseks analüüsiks.
 
 -- ============================================================
--- 2. TABELI STRUKTUUR
--- Millised veerud ja näidisandmed on müügitabelis?
+-- SAMM 1: TEST-KOOPIA LOOMINE
 -- ============================================================
--- Enne mis tahes analüüsi on mõistlik vaadata, milliste
--- andmetega üldse tegemist on. LIMIT 10 hoiab päringu kiirena.
+-- Toomase raudne reegel: ära kunagi muuda algandmeid ilma testita.
+-- CREATE TABLE AS kopeerib tabeli struktuuri JA kõik andmed.
+-- Tulemus: customers_test on täpne koopia customers tabelist.
 
-SELECT *
-FROM sales
-LIMIT 10;
+CREATE TABLE customers_test AS SELECT * FROM customers;
 
--- Veerud: id, sale_id, invoice_id, sale_date, customer_id, product_id,
--- quantity, unit_price, total_price, channel, store_location, payment_method
 
--- Järeldus:
--- Tabel sisaldab nii müügitehingu väärtust, kliendiinfot kui ka müügikanali andmeid.
-
--- ============================================================
--- 3. SUURIMAD TEHINGUD — KOGU ANDMESTIK
--- Millised on 10 suurimat müügitehingut?
--- ============================================================
--- Suurimad tehingud mõjutavad kõige rohkem käibe- ja müügistatistikat ning 
--- võivad aidata avastada võimalikke erindlikke kirjeid.
-
-SELECT sale_id,
-       customer_id,
-       sale_date,
-       total_price
-FROM sales
-ORDER BY total_price DESC
-LIMIT 10;
-
--- Tulemus: Suurimad tehingud jäävad vahemikku  1 858,95 kuni 2 170,40 EUR.
--- Järeldus: Esialgsel vaatlusel ei paista suurimate tehingute seas ebarealistlikke väärtusi.
-
--- ============================================================
--- 4. SUURIMAD TEHINGUD — TALLINNA KAUPLUS
--- Millised on 10 suurimat müüki Tallinna kaupluses?
--- ============================================================
--- Kontrollib, kas Tallinna tehingud on ootuspärases vahemikus võrreldes kogu andmestikuga.
--- WHERE store_location = 'Tallinn' filtreerib ainult poemüügid.
-
-SELECT sale_id,
-       customer_id,
-       sale_date,
-       total_price
-FROM sales
-WHERE store_location = 'Tallinn'
-ORDER BY total_price DESC
-LIMIT 10;
-
--- Tulemus: Suurimad tehingud jäävad vahemikku 1 858,95 kuni 2 170,40 EUR.
--- Järeldus: Esialgsel vaatlusel ei paista suurimate tehingute seas ebarealistlikke väärtusi.
-
--- ============================================================
--- 5. VÄIKSEIMAD TEHINGUD — ANDMEKVALITEEDI KONTROLL
--- Kas leidub negatiivseid, null- või kahtlasi summasid?
--- ============================================================
--- Üks olulisemaid andmekvaliteedi kontrolle.
--- Negatiivsed summad viitavad kas tagastustele, mis on sisestatud müügina, või andmevigetele.
-
-SELECT sale_id,                     -- müügitehingu ID
-       customer_id,                 -- kliendi ID
-       sale_date,                   -- müügi kuupäev
-       total_price                  -- tehingu kogusumma
-FROM sales
-WHERE total_price <=0               -- filtreerib 0 ning negatiivse väärtusega andmed aruandesse
-OR total_price IS NULL              -- kaasab ka tehingud, kus müügisumma puudub (NULL väärtus)
-ORDER BY total_price ASC;           -- Sorteerib kasvavalt, et kõige negatiivsemad summad oleksid tulemuse alguses
-
--- Järeldus: Päring kuvab kõik negatiivsed, null- või puuduvad summad.
-
---Täpsustus: 
--- Mitu tehingut on negatiivse summaga ja milline on kogusumma?
--- kui laiaulatuslik on negatiivse summa probleem?
--- Aitab otsustada, kas tegemist on üksikute vigadega või süsteemsema probleemiga (nt tagastused)
+-- Kontrollin, et koopia õnnestus — ridade arv peab ühtima algandmetega.
+-- LEID: 3 150 rida — võrdne customers põhitabeliga. Koopia õnnestus.
 SELECT 
-COUNT(*) AS neg_tehing_tk,           -- negatiivsete tehingute arv
-SUM(total_price) AS neg_tehing_sum   -- negatiivsete tehingute kogusumma
-FROM sales        
-WHERE total_price < 0;               -- filtreerib ainult negatiivsed tehingud
+'customers_test' AS tabel,
+COUNT(*) AS ridade_arv 
+FROM customers_test
 
--- Tulemus:
--- Negatiivsete summade vahemik: -1 405,32 kuni -16,37
--- NULL-väärtuseid ei leitud
--- 0-väärtuseid ei leitud
--- Negatiivseid tehinguid 305
--- Negatiivsete tehingute kogusumma -88 632,61
+UNION ALL
 
--- Järeldus:
--- Negatiivsed summad vajavad täiendavat uurimist.
--- Võimalikud põhjused:
---   • toodete tagastused
---   • kreeditarved
---   • andmesisestuse vead
+SELECT
+'customers' AS tabel,
+COUNT(*) AS ridade_arv FROM customers;
 
--- Finantsvaade:
--- Kuigi negatiivseid tehinguid on ainult umbes 2% kogu andmestikust, on nende mõju käibele märkimisväärne.
--- Enne ärianalüüsi kasutamist tuleb nende olemus selgitada.
 
 -- ============================================================
--- 6. PUUDUVAD KLIENDIANDMED
--- Mitmel tehingul puudub customer_id?
+-- SAMM 2: DUPLIKAATSETE E-MAILIDE TUVASTAMINE
 -- ============================================================
--- COUNT(*) loeb kõiki ridu, COUNT(customer_id) jätab NULL vahele.
--- Vahe = tehingud, kus klient on teadmata.
--- Toomas: "Ma ei usalda andmeid" — see kontrollib olulist aspekti.
+-- Duplikaadid tekivad, kui sama klient on süsteemi sisestatud mitu korda (nt e-poe ja sularaha andmed on ühildunud valesti).
+-- GROUP BY koondab read e-maili järgi.
+-- HAVING COUNT(*) > 1 filtreerib välja ainult need e-mailid, mis esinevad rohkem kui üks kord..
+SELECT 
+    email,                      -- e-posti aadress
+    COUNT(*) AS koopiate_arv    -- mitu korda see e-mail esineb
+FROM customers_test
+GROUP BY email
+HAVING COUNT(*) > 1             -- näitame ainult duplikaate
+ORDER BY koopiate_arv DESC;     -- kõige rohkem korduvad e-mailid esimesena
 
-SELECT COUNT(*)                    AS tehinguid_kokku,
-       COUNT(customer_id)          AS tehinguid_kliendiga,
-       COUNT(*) - COUNT(customer_id) AS puuduvad_kliendid
-FROM sales;
+/* 
+LEID: 
+- 130 korduvat e-maili on kokku (126+2*2) = 126 e-maili aadressi esineb andmestikus 2- kordselt ning 2 e-maili aadressi esineb 3- kordselt 
+- Need viitavad klientidele, kes on süsteemi sisestatud mitu korda erinevate customer_id väärtustega
 
--- Tulemus: 1 487 tehingul puudub customer_id (~9,8% kõigist).
+ÄRILINE MÕJU:
+- Klientide koguarv on tegelikust suurem
+- Lojaalsusstatistika on moonutatud, kuna ühe kliendi ostud on jagatud mitme kirje vahel
+- Turunduskampaaniad võivad saata samale kliendile mitu sõnumit
 
--- Järeldus:
--- Müügitulu analüüsi see otseselt ei mõjuta, kuid vähendab kliendikäitumise analüüsi kvaliteeti.
--- Küsimus Roll D-le: Kas puuduvad kliendid esinevad pigem e-poes või füüsilistes kauplustes?
+JÄRGMINE SAMM: 
+- Nädal 3-s kasutame ROW_NUMBER() funktsiooni, et tuvastada, millise duplikaatkirje jätame alles
+*/
 
--- ============================================================
--- 7. TULEVIKU KUUPÄEVADEGA TEHINGUD
--- Kas leidub müüke, mis toimuvad tulevikus?
--- ============================================================
-
-SELECT sale_id,
-       sale_date,
-       total_price,
-       customer_id
-FROM sales
-WHERE sale_date > CURRENT_DATE
-ORDER BY sale_date ASC;
-
--- Tulemus:
--- Leiti 2 tuleviku kuupäevaga tehingut.
-
--- Järeldus:
--- Müügitehing ei saa tavapäraselt toimuda tulevikus.
--- Tõenäoliselt on tegemist andmesisestuse veaga.
-
--- Mõju:
--- Probleem on väikesemahuline, kuid võib moonutada perioodipõhiseid aruandeid.
 
 -- ============================================================
--- 8. KOONDÜLEVAADE
--- Kõik olulisemad kvaliteedinäitajad ühes päringus
+-- SAMM 3: PUUDUVATE NIMEDE (NULL) KONTROLLIMINE
 -- ============================================================
+-- FILTER (WHERE ...) on PostgreSQL-i laiendus COUNT-ile: loeb ainult need read, kus tingimus on tõene.
+-- Kontrollime nii NULL-väärtusi kui ka tühje stringe (''), sest mõlemad tähendavad sisuliselt puuduvat nime.
 
--- Lisaanalüüs:
--- Kasutab CASE WHEN konstruktsiooni, mida uurisin iseseisvalt väljaspool nädala kohustuslikku materjali.
+SELECT
+    COUNT(*) FILTER (WHERE first_name IS NULL OR first_name = '') AS null_eesnimi,   -- puuduvad eesnimed
+    COUNT(*) FILTER (WHERE last_name IS NULL OR last_name = '') AS null_perenimi     -- puuduvad perenimed
+FROM customers_test;
 
-SELECT COUNT(*)                          AS tehinguid_kokku,
-       COUNT(*) - COUNT(customer_id)     AS puuduvad_kliendid,
-       COUNT(CASE WHEN total_price < 0
-                  THEN 1 END)            AS negatiivsed_summad,
-       COUNT(CASE WHEN sale_date > CURRENT_DATE
-                  THEN 1 END)            AS tuleviku_kirjed,
-       MIN(total_price)                  AS väikseim_summa,
-       MAX(total_price)                  AS suurim_summa,
-       SUM(Total_price)                  AS tehingute_koguväärtus
-FROM sales;
-                                       
--- Järeldus:
--- Päring koondab peamised andmekvaliteedi näitajad ühte vaatesse ning võimaldab kiiret juhtimisülevaadet.
+/* 
+LEID: 
+- Puuduvaid eesnimesid: 0
+- Puuduvaid perenimesid: 0
+
+JÄRELDUS:
+Nimede kvaliteet on hea — kõigil kliendikirjetel on nii ees- kui perenimi olemas.
+See on oluline klienditeenindusliku personaliseerimise seisukohalt.
+*/
+
 
 -- ============================================================
--- KOKKUVÕTE TOOMASELE
+-- SAMM 4A: LINNANIMEDE ÜLEVAADE (RAW)
 -- ============================================================
+-- Esimene päring näitab linnanimesid täpselt nii, nagu need andmebaasis on — ilma ühtegi muudatuseta.
+-- Eesmärk: saada ülevaade, millised erinevad kirjaviisid esinevad.
 
--- Analüüsitud müügitehinguid: 15 234
---
--- Peamised leiud:
--- • 1 487 tehingul (~9,8%) puudub customer_id
--- • 305 tehingut (~2,0%) sisaldavad negatiivset summat
--- • Negatiivsete tehingute koguväärtus on -88 632,61 EUR
--- • 2 tehingul esineb tuleviku kuupäev
--- • NULL- või 0-väärtusega müügisummasid ei leitud
---
--- Üldhinnang:
--- Andmestik on valdavalt kasutuskõlblik ning suuri struktuurseid probleeme ei tuvastatud.
---
--- Enne andmete kasutamist ärianalüüsis soovitan:
--- • selgitada negatiivsete tehingute olemus
--- • kontrollida tuleviku kuupäevade põhjuseid
--- • hinnata puuduva customer_id mõju kliendianalüüsile
---
--- Suurim võimalik mõju ärianalüüsi kvaliteedile tuleneb negatiivsetest tehingutest, mille koguväärtus on -88 632,61 EUR.
---
+SELECT 
+    city,                       -- linnanimi täpselt nii nagu andmebaasis
+    COUNT(*) AS klientide_arv   -- mitu klienti selle kirjaviisiga linnas
+FROM customers_test
+GROUP BY city
+ORDER BY city;                  -- tähestikuline järjestus probleemide nägemiseks
+
+/* 
+LEID:
+SQL loeb ' Tallinn, 'Tallinn ' 'tallinn', 'Tallinn' ja 'TALLINN' viie erinevana.
+Sellest tuleneb moonutus kõigis linnakesksetetes aruannetes.
+*/
+
+
 -- ============================================================
+-- SAMM 4B: LINNANIMEDE PROBLEEMIDE KAARDISTAMINE
+-- ============================================================
+-- INITCAP(TRIM(city)) teeb kaks asja korraga:
+--   TRIM()    — eemaldab tühikud nime algusest ja lõpust
+--   INITCAP() — muudab esimese tähe suureks, ülejäänud väikeseks
+
+SELECT 
+    INITCAP(TRIM(city))             AS puhas_linn,          -- ühtlustatud nimekuju
+    COUNT(*)                        AS kliente_kokku,       -- klientide koguarv selles linnas
+    COUNT(DISTINCT city)            AS erinevaid_kujusid,   -- COUNT(DISTINCT city) loeb, mitu erinevat kirjaviisi ühe linna kohta esineb.
+    STRING_AGG(DISTINCT city, ', ') AS kujud                -- STRING_AGG koondab kõik erinevad kirjaviisid ühte lahtrisse loetelu kujul.
+FROM customers_test
+WHERE city IS NOT NULL                                      -- jätame NULL-linnad välja
+GROUP BY INITCAP(TRIM(city))
+HAVING COUNT(DISTINCT city) > 1                             -- filtreerib ainult probleemse linnad.
+ORDER BY kliente_kokku DESC;                                -- suuremad linnad esimesena
+
+/* LEID:
+- SQL-i loogika järgi on andmestikus 54 erinevat "linna"
+- Tegelikult on unikaalseid linnanimesid 12
+- Seega 42 "linna" on tegelikult kordused (nt ' Tallinn, 'Tallinn ' 'tallinn', 'Tallinn' ja 'TALLINN)
+
+ÄRILINE MÕJU:
+- Piirkondlik müügianalüüs on praegu täiesti ebausaldusvääne
+- Tallinna müüginumbrid on hajutatud mitme kirje vahel
+
+LAHENDUS (Nädal 3):
+UPDATE customers_test SET city = INITCAP(TRIM(city));*/
+
+
+-- ============================================================
+-- SAMM 5: KONTAKTANDMETE TERVIKLIKKUSE KONTROLL
+-- ============================================================
+-- Kontrollime kahte kriitilist kontaktvälja: telefon ja e-mail.
+-- Turunduse ja müügi seisukohalt on e-mail eriti oluline,
+-- kuna võimaldab digitaalset suhtlust ja kampaaniaid.
+
+SELECT
+    COUNT(*) FILTER (WHERE phone IS NULL OR phone = '') AS null_telefon,    -- puuduvad telefoninumbrid
+    COUNT(*) FILTER (WHERE email IS NULL OR email = '') AS null_email       -- puuduvad e-mailid
+FROM customers_test;
+
+/* LEID:
+- Puuduvaid telefoninumbreid: 0 — hea uudis müügiosakonnale
+- Puuduvaid e-maile: 380 (~12% kõigist klientidest)
+
+ÄRILINE MÕJU:
+- 380 klienti on UrbanStyle'i jaoks "digitaalselt nähtamatud"
+- Nad ei saa uudiskirju, kampaaniapakkumisi ega järelteenindust
+- Anna Mets (turundus) ei saa neid kliente e-turundusega kaasata
+
+VÕIMALIKUD PÕHJUSED:
+- Klient ostis poest ilma end registreerimata
+- E-mail jäi kassas sisestamata
+- Andmete migreerimisel läks e-mail kaduma
+
+SOOVITUS:
+Järgmises analüüsisammus kontrollida, kas e-mailita kliendid on pigem poemüügid (kus registreerimine on vabatahtlik) või e-poe kliendid (kus e-mail peaks olema kohustuslik).*/
+
+
+-- ============================================================
+--Samm 6. Koostan puhastamisraporti:
+-- ============================================================
+--Kategooria	                Leitud probleeme	        Kirjeldus
+--Duplikaatsed e-mailid	?	           130                  Sama e-mail mitmel kliendil
+--NULL eesnimi	?	                   0                    Puuduv kliendi eesnimi
+--NULL perenimi	?	                   0                    Puuduv kliendi perenimi
+--Ebajärjekindlad linnanimed?          42=54-12            42 korduvat linnanime tulenevalt erinevatest nimekujudest (nt tallinn vs Tallinn)
+--NULL telefon/e-mail?	               0/380               Puuduvad kontaktandmed
+--KOKKU probleeme?	 
+--Lisa soovitus: milline probleem mõjutab igapäevast tööd kõige rohkem?
+
+-- ============================================================
+-- SAMM 6A: PUHASTUSRAPORT — KOONDÜLEVAADE - Claude kaasabil
+-- ============================================================
+-- Koondab kõik leitud probleemid ühte tabelisse. Võimaldab Toomasel ühel pilgul näha andmekvaliteedi seisu.
+SELECT 
+    'Duplikaatsed e-mailid'         AS probleem,
+    130                             AS leitud_kogus,
+    'Sama e-mail mitmel kliendil'   AS kirjeldus,
+    'Kõrge'                         AS prioriteet,
+    2                               AS sort_order        -- sorteerimiseks, 2=Kõrge
+UNION ALL SELECT 'Puuduv eesnimi', 0, 'Kõik kirjed on korras', 'Puudub', 3     -- 3=Puudub ehk madalaim prioriteet                  
+UNION ALL SELECT 'Puuduv perenimi', 0, 'Kõik kirjed on korras','Puudub', 3     -- 3=Puudub                       
+UNION ALL SELECT 'Ebajärjekindlad linnanimed', 42, '42 korduvat kirjaviisi 12 tegeliku linna kohta','Kõrge', 2    -- 2=Kõrge                         
+UNION ALL SELECT 'Puuduv e-mail', 380, '~12% klientidest pole digitaalselt kättesaadavad', 'Kriitiline', 1        -- 1=Kriitiline ehk kõrgeim prioriteet                   
+UNION ALL SELECT 'Puuduv telefon', 0,  'Kõik kirjed on korras', 'Puudub', 3              -- 3=Puudub                        
+ORDER BY 5;     -- sorteerime viienda veeru (sort_order) järgi, -- tulemus: Kriitiline (1) → Kõrge (2) → Puudub (3)             
+/*KOKKUVÕTE TOOMASELE:
+Analüüsitud kliendikirjeid: 3 150
+Peamised leiud prioriteedi järgi:
+  1. [KRIITILINE] 380 klienti (~12%) puudub e-mail          → digitaalne turundus nende klientideni ei jõua
+  2. [KÕRGE] 130 duplikaat-e-maili                          → klientide koguarv ja lojaalsusstatistika on moonutatud
+  3. [KÕRGE] 42 liigset linnanime (tegelikult 12 linna)    → piirkondlik müügianalüüs ei ole praegu usaldusväärne
+Positiivne:
+  • Kõigil kirjetel on ees- ja perenimi olemas
+  • Telefoninumbrid on täielikud
+Soovituslik puhastamise järjekord:
+  1. Linnanimede ühtlustamine — INITCAP(TRIM())             → kiire ja ohutu, mõjutab kohe aruandlust
+  2. Duplikaatide eemaldamine — ROW_NUMBER() meetod         → nõuab ettevaatlikkust, Nädal 3 teema
+  3. Puuduvate e-mailide strateegia                         → äriline otsus, kas koguda aktiivselt või jätta märgituks*/
