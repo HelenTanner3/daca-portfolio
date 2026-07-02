@@ -1,9 +1,10 @@
-# Nädal 2: SQL Puhastamine — Kliendiandmete puhastamine
+# Nädal 2: SQL Puhastamine — Kliendiandmete Tervendamine
 
 ## Projektikontekst
-UrbanStyle.ltd on Eesti moeettevõte, mis on viimase kahe aastaga kasvanud **150%**. See kiire laienemine on tekitanud andmekaose, kus kolm eraldiseisvat süsteemi (e-pood, sularaha ja varude haldus) ei räägi omavahel.
+UrbanStyle.ltd on Eesti moeettevõte, mis on viimase kahe aastaga kasvanud **150%**. See kiire laienemine on tekitanud andmekaose, kus kolm eraldiseisvat süsteemi (e-pood, kassasüsteem ja varude haldus) ei räägi omavahel.
 
-IT-direktor Toomas Kask on hoiatanud, et praeguseid numbreid ei saa usaldada. Minu roll teisel nädalal oli läbi viia andmete puhastamise "kirurgia", järgides ranget protsessi: **Test → Verify → Log → Commit**.
+IT-direktor Toomas Kask on hoiatanud, et praeguseid numbreid ei saa usaldada. Minu roll teisel nädalal oli läbi viia andmete puhastamise "kirurgia", järgides ranget protsessi: 
+**Test → Verify → Log → Commit**.
 
 ## Minu roll: Kliendiandmete puhastaja (Roll B)
 **Meeskond:** Operations Intelligence
@@ -20,19 +21,23 @@ See nädal õpetas mulle, et andmete puhastamine nõuab palju täpsust ja kannat
 
 ## Kasutatud SQL tehnikad
 - `GROUP BY` & `HAVING` — duplikaatide leidmiseks
-- `IS NULL` & `COALESCE()` — puuduvate väärtuste haldamiseks
+- `IS NULL` & `FILTER (WHERE ...)` — puuduvate väärtuste 
+  tingimuspõhiseks loendamiseks
 - `INITCAP()` & `TRIM()` — tekstiväljade ühtlustamiseks
-- `FILTER (WHERE ...)` — tingimuspõhine loendamine
+- `COUNT(DISTINCT ...)` — unikaalsete kirjaviiside loendamiseks
 - `STRING_AGG()` — erinevate kirjaviiside koondamiseks
-- `CREATE TABLE AS` — turvalise testkeskkonna loomiseks
+- `CASE WHEN` — tunnuste lisamiseks vigaste ridade tuvastamisel
 - `UNION ALL` — koondülevaate koostamiseks
+- `CREATE TABLE AS` — turvalise testkeskkonna loomiseks
 
 ## Tehtud analüüs
 
-1. **Test-koopia loomine** — `customers_test` tabel algandmete kaitsmiseks [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/1%20Testkoopia%20loomine.png)
+1. **Test-koopia loomine** — `customers_test` tabel algandmete kaitsmiseks, kontrollisin et ridade arv ühtib originaaliga (3 150 rida) [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/1%20Testkoopia%20loomine.png)
 2. **Duplikaatsete e-mailide tuvastamine** — leidsin kliendid, kes on süsteemi sisestatud mitu korda [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/2%20duplikaatsed%20e-mailid.png)
 3. **Puuduvate nimede kontrollimine** — NULL ja tühjade stringide tuvastamine kriitilistes väljades [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/3%20puuduvad%20nimed.png)
-4. **Linnanimede kaardistamine** — ebajärjekindlate kirjaviiside tuvastamine kahes etapis [Link_1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/4A%20linnade%20nimekujud%20(54rida).png), [Link_2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/4B%20linnade%20nimekujud%20kaardistus%20(12rida).png)
+4. **Linnanimede kaardistamine kahes etapis:**
+   - RAW vaade — linnanimede täpne seis andmebaasis [Link 1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/4A%20linnade%20nimekujud%20(54rida).png), [Link_2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/4B%20linnade%20nimekujud%20kaardistus%20(12rida).png)
+   - Probleemide kaardistamine — vigaste ridade loendamine ja eksportimine ecxel [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning_Linnanimed.xlsx)
 5. **Kontaktandmete terviklikkus** — telefoni ja e-maili puudumise kontroll [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/5%20puuduvad%20kontaktandmed.png)
 6. **Puhastusraport** — kõik leiud prioriteedi järgi koondatud ühte vaatesse [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/6%20puhastamisraport.png)
 
@@ -40,36 +45,43 @@ See nädal õpetas mulle, et andmete puhastamine nõuab palju täpsust ja kannat
 
 | Näitaja | Leitud probleemid | Prioriteet | Äriline mõju |
 |---------|-------------------|------------|--------------|
-| Puuduvad e-mailid | 380 (~12%) | **Kriitiline** | Turunduskampaaniad ei jõua nende klientideni |
-| Duplikaatsed e-mailid | 128 | **Kõrge** | Moonutab klientide koguarvu ja lojaalsusstatistikat |
-| Linnanimede ebakõlad | 42 liigset kirjaviisi | **Kõrge** | Piirkondlik müügianalüüs on ebausaldusvääre |
+| Puuduvad e-mailid | **380** (~12%) | **Kriitiline** | Turunduskampaaniad ei jõua nende klientideni |
+| Duplikaatsed e-mailid | **130** | **Kõrge** | Moonutab klientide koguarvu ja lojaalsusstatistikat |
+| Linnanimede ebakõlad | 42 liigset kirjaviisi, **252** rida (~8%) vajab parandust  | **Kõrge** | Piirkondlik müügianalüüs on ebausaldusvääre |
 | Puuduvad nimed | 0 | Puudub | Kõik kirjed on korras |
 | Puuduvad telefonid | 0 | Puudub | Kõik kirjed on korras |
+|**Kokku probleeme:**| **762 kirjet**| |**~24,2% kõigist klientidest**
 
 ## Detailsemad leiud
 
-**Linnanimede probleem** on eriti huvitav näide sellest, kuidas tehniline detail mõjutab ärilist otsust:
+**Duplikaatsed e-mailid:**
+- 126 e-maili aadressi esineb 2 korda
+- 2 e-maili aadressi esineb 3 korda
+- Kokku 130 duplikaatset kirjet
+
+**Linnanimede probleem:**
 - SQL-i loogika järgi on andmestikus **54 erinevat linna**
 - Tegelikult on unikaalseid linnanimesid ainult **12**
-- **42 "linna"** on tegelikult kordused tühikute ja suur/väiketähtede erinevustest (nt "tallinn", " Tallinn", "TALLINN", "Tallinn ")
-- Liis Koppel (operatsioonijuht) ei saa teha kauplustepõhiseid otsuseid enne, kui see on parandatud
+- **42 "linna"** on tegelikult kordused tühikute ja suur/väiketähtede erinevustest (nt `' Tallinn'`, `'Tallinn '`, `'tallinn'`, `'TALLINN'`)
+- **252 kliendirida (~8%)** vajavad linnanimede parandamist
 
 ## Olulisemad õppetunnid
 - **Andmete puhastamine on 80% tööajast** — puhtad andmed on usaldusväärse analüüsi alus
-- **SQL loogika vs inimloogika** — SQL-i jaoks on "Tallinn" ja "tallinn" täiesti erinevad objektid
+- **SQL loogika vs inimloogika** — SQL-i jaoks on `'Tallinn'` ja `'tallinn'` täiesti erinevad objektid
 - **Test enne muutmist** — `CREATE TABLE AS` on lihtne viis algandmete kaitsmiseks
-- **Dokumentatsioon on kohustuslik** — iga muudatus peab olema logitud, et saaks vajadusel tagasi pöörduda
+- **UNION ALL vajab ORDER BY puhul veeru numbrit** — PostgreSQL ei luba `CASE WHEN` avaldist `UNION ALL` päringute `ORDER BY` osas, lahenduseks on lisada igasse `SELECT` lausesse eraldi sorteerimisnumber
 
 ## Soovitatav puhastamise järjekord
     1. **Linnanimede ühtlustamine** `INITCAP(TRIM())` abil       → kiire ja ohutu, mõjutab kohe aruandlust
     2. **Duplikaatide eemaldamine** `ROW_NUMBER()` meetodiga     → nõuab ettevaatlikkust, Nädal 3 teema
-    3. **Puuduvate e-mailide strateegia**                         → äriline otsus, kas koguda aktiivselt või märkida eraldi
+    3. **Puuduvate e-mailide strateegia**                         →  äriline otsus: kas koguda aktiivselt või märkida "puudub" staatusesse
 
 ## Failid
 [week2_customers_cleaning.sql](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning.sql) — kõik SQL päringud koos kommentaaride, leidude ja järeldustega
 
 ## Järgmised sammud
-Nädal 3-s õpime SQL JOIN-e — saame ühendada `customers`, `sales` ja `products` tabelid ning hakata vastama keerukamatele äriküsimustele.
+Nädal 3-s õpime SQL JOIN-e — saame ühendada `customers`, `sales` ja `products` tabelid ning hakata vastama keerukamatele äriküsimustele. Lisaks rakendame 
+`ROW_NUMBER()` funktsiooni duplikaatide eemaldamiseks.
 
 ---
 *See projekt on osa DACA (Data Analyst Career Accelerator) programmist. Ettevõte UrbanStyle.ltd on fiktsioonalne, loodud õppeeesmärkidel.*
