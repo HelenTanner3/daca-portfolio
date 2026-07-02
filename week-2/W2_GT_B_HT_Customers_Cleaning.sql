@@ -133,10 +133,34 @@ GROUP BY INITCAP(TRIM(city))
 HAVING COUNT(DISTINCT city) > 1                             -- filtreerib ainult probleemse linnad.
 ORDER BY kliente_kokku DESC;                                -- suuremad linnad esimesena
 
+
+-- Vigaste ridade kokkuvõte
+SELECT 
+    COUNT(*) AS ridu_kokku,
+    COUNT(*) FILTER (WHERE city != INITCAP(TRIM(city))) AS vigaseid_ridu,
+    ROUND(100.0 * COUNT(*) FILTER (WHERE city != INITCAP(TRIM(city))) / COUNT(*), 2) AS vea_protsent
+FROM customers_test
+WHERE city IS NOT NULL;
+
+--Vigaste linnanimede muutmise vajaduse kaardistamine (detailid exelisse)
+SELECT
+    customer_id,
+    city AS algne_nimi,
+    INITCAP(TRIM(city)) AS puhas_nimi,
+    -- Lisame tunnuse: kui algne ja puhas nimi ei kattu, siis 'Jah'
+    CASE 
+        WHEN city = INITCAP(TRIM(city)) THEN '0'
+        ELSE '1'
+    END AS vaja_muuta
+FROM customers_test
+WHERE city IS NOT NULL
+ORDER BY city;
+
 /* LEID:
 - SQL-i loogika järgi on andmestikus 54 erinevat "linna"
 - Tegelikult on unikaalseid linnanimesid 12
 - Seega 42 "linna" on tegelikult kordused (nt ' Tallinn, 'Tallinn ' 'tallinn', 'Tallinn' ja 'TALLINN)
+- Klienditabel sisaldab kokku 3150 rida, neist 252 rida (8%) on vigaste linnanimedega ning vajavad parandamist 
 
 ÄRILINE MÕJU:
 - Piirkondlik müügianalüüs on praegu täiesti ebausaldusvääne
@@ -183,9 +207,12 @@ Järgmises analüüsisammus kontrollida, kas e-mailita kliendid on pigem poemü�
 --Duplikaatsed e-mailid	?	           130                  Sama e-mail mitmel kliendil
 --NULL eesnimi	?	                   0                    Puuduv kliendi eesnimi
 --NULL perenimi	?	                   0                    Puuduv kliendi perenimi
---Ebajärjekindlad linnanimed?          42=54-12            42 korduvat linnanime tulenevalt erinevatest nimekujudest (nt tallinn vs Tallinn)
---NULL telefon/e-mail?	               0/380               Puuduvad kontaktandmed
---KOKKU probleeme?	 
+--Ebajärjekindlad linnanimed?          252                  252 rida vajavad linnanimede parandamist tulenevalt erinevatest nimekujudest (nt tallinn vs Tallinn)
+--                                                          -  42 liigset linnanime (tegelikult 12 linna)
+--NULL telefon/e-mail?	               380                  Puuduvad e-mailid, telefoninumbrid on kõigil klientidel süsteemis olemas
+--KOKKU Kliente andmebaasis:         3 150 
+--KOKKU probleeme?	                   762 /24,2%
+
 --Lisa soovitus: milline probleem mõjutab igapäevast tööd kõige rohkem?
 
 -- ============================================================
@@ -209,11 +236,12 @@ Analüüsitud kliendikirjeid: 3 150
 Peamised leiud prioriteedi järgi:
   1. [KRIITILINE] 380 klienti (~12%) puudub e-mail          → digitaalne turundus nende klientideni ei jõua
   2. [KÕRGE] 130 duplikaat-e-maili                          → klientide koguarv ja lojaalsusstatistika on moonutatud
-  3. [KÕRGE] 42 liigset linnanime (tegelikult 12 linna)    → piirkondlik müügianalüüs ei ole praegu usaldusväärne
+  3. [KÕRGE] 42 liigset linnanime (tegelikult 12 linna)     → piirkondlik müügianalüüs ei ole praegu usaldusväärne
+            252 klienti (~ 8%) linnanimi vaja parandada
 Positiivne:
   • Kõigil kirjetel on ees- ja perenimi olemas
   • Telefoninumbrid on täielikud
 Soovituslik puhastamise järjekord:
   1. Linnanimede ühtlustamine — INITCAP(TRIM())             → kiire ja ohutu, mõjutab kohe aruandlust
   2. Duplikaatide eemaldamine — ROW_NUMBER() meetod         → nõuab ettevaatlikkust, Nädal 3 teema
-  3. Puuduvate e-mailide strateegia                         → äriline otsus, kas koguda aktiivselt või jätta märgituks*/
+  3. Puuduvate e-mailide strateegia                         → äriline otsus, kas koguda aktiivselt või jätta "puudub" staatusesse*/
