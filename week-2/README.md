@@ -32,14 +32,14 @@ See nädal õpetas mulle, et andmete puhastamine nõuab palju täpsust ja kannat
 
 ## Tehtud analüüs
 
-1. **Test-koopia loomine** — `customers_test` tabel algandmete kaitsmiseks, kontrollisin et ridade arv ühtib originaaliga (3 150 rida) [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/1%20Testkoopia%20loomine.png)
-2. **Duplikaatsete e-mailide tuvastamine** — leidsin kliendid, kes on süsteemi sisestatud mitu korda [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/2%20duplikaatsed%20e-mailid.png)
-3. **Puuduvate nimede kontrollimine** — NULL ja tühjade stringide tuvastamine kriitilistes väljades [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/3%20puuduvad%20nimed.png)
+1. **Test-koopia loomine** — `customers_test` tabel algandmete kaitsmiseks, kontrollisin et ridade arv ühtib originaaliga (3 150 rida) [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/1%20Testkoopia%20loomine.png)
+2. **Duplikaatsete e-mailide tuvastamine** — leidsin kliendid, kes on süsteemi sisestatud mitu korda [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/2%20duplikaatsed%20e-mailid.png)
+3. **Puuduvate nimede kontrollimine** — NULL ja tühjade stringide tuvastamine kriitilistes väljades [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/3%20puuduvad%20nimed.png)
 4. **Linnanimede kaardistamine kahes etapis:**
-   - RAW vaade — linnanimede täpne seis andmebaasis [Link 1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/4A%20linnade%20nimekujud%20(54rida).png), [Link_2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/4B%20linnade%20nimekujud%20kaardistus%20(12rida).png)
-   - Probleemide kaardistamine — vigaste ridade loendamine ja eksportimine ecxel [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning_Linnanimed.xlsx)
-5. **Kontaktandmete terviklikkus** — telefoni ja e-maili puudumise kontroll [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/5%20puuduvad%20kontaktandmed.png)
-6. **Puhastusraport** — kõik leiud prioriteedi järgi koondatud ühte vaatesse [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/6%20puhastamisraport.png)
+   - RAW vaade — linnanimede täpne seis andmebaasis [Link 1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/4A%20linnade%20nimekujud%20(54rida).png), [Link_2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/4B%20linnade%20nimekujud%20kaardistus%20(12rida).png)
+   - Probleemide kaardistamine — vigaste ridade loendamine ja eksportimine ecxel [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/W2_GT_B_HT_Customers_Cleaning_Linnanimed.xlsx)
+5. **Kontaktandmete terviklikkus** — telefoni ja e-maili puudumise kontroll [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/5%20puuduvad%20kontaktandmed.png)
+6. **Puhastusraport** — kõik leiud prioriteedi järgi koondatud ühte vaatesse [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/6%20puhastamisraport.png)
 
 ## Peamised leiud
 
@@ -72,12 +72,14 @@ See nädal õpetas mulle, et andmete puhastamine nõuab palju täpsust ja kannat
 - **UNION ALL vajab ORDER BY puhul veeru numbrit** — PostgreSQL ei luba `CASE WHEN` avaldist `UNION ALL` päringute `ORDER BY` osas, lahenduseks on lisada igasse `SELECT` lausesse eraldi sorteerimisnumber
 
 ## Soovitatav puhastamise järjekord
-    1. **Linnanimede ühtlustamine** `INITCAP(TRIM())` abil       → kiire ja ohutu, mõjutab kohe aruandlust
-    2. **Duplikaatide eemaldamine** `ROW_NUMBER()` meetodiga     → nõuab ettevaatlikkust, Nädal 3 teema
-    3. **Puuduvate e-mailide strateegia**                         →  äriline otsus: kas koguda aktiivselt või märkida "puudub" staatusesse
+ - **Linnanimede ühtlustamine** `INITCAP(TRIM())` abil       → kiire ja ohutu, mõjutab kohe aruandlust
+ - **Duplikaatide eemaldamine** `ROW_NUMBER()` meetodiga     → nõuab ettevaatlikkust, Nädal 3 teema                                     → `Valmis`  06.juuli seisuga
+ - **Puuduvate e-mailide strateegia**                         →  äriline otsus: kas koguda aktiivselt või märkida "puudub" staatusesse
 
 ## Failid
-[week2_customers_cleaning.sql](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning.sql) — kõik SQL päringud koos kommentaaride, leidude ja järeldustega
+- [week2_customers_cleaning.sql](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning.sql) — kõik SQL päringud koos kommentaaride, leidude ja järeldustega
+- [W2_Cleaning_log](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_Cleaning_log) - SQL puhastamine - logi sissekanded 
+- [W2 Daca-Group-UrbanStyle.ltd](https://github.com/Kolju3/DACA-group/tree/main/week-2/group) - Operatsioonide osakond - Nädal 2: Andmekvaliteedi audit ja SQL puhastamine - Presentatsioon & Readme 
 
 ## Järgmised sammud
 Nädal 3-s õpime SQL JOIN-e — saame ühendada `customers`, `sales` ja `products` tabelid ning hakata vastama keerukamatele äriküsimustele. Lisaks rakendame 
