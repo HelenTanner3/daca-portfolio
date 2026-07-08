@@ -20,14 +20,14 @@ andmekvaliteedi vaatenurgast (summad, kuupäevad, kogused).
 ## Tehtud analüüs
 Kirjutasin 8 SQL päringut, mis kontrollisid:
 
-1. **Tabeli maht** — mitu tehingut on andmestikus   [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/1_TABELI%20MAHT.png)
-2. **Tabeli struktuur** — millised veerud ja andmed on olemas   [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/2._TABELI%20STRUKTUUR.png)
-3. **Suurimad tehingud** — kogu andmestik (ebarealistlike väärtuste kontroll)  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/3_SUURIMAD%20TEHINGUD_KOGU%20ANDMESTIK.png)
-4. **Suurimad tehingud** — Tallinna kauplus eraldi  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/4_SUURIMAD%20TEHINGUD-TALLINNA%20KAUPLUS.png)
-5. **Väikseimad tehingud** — negatiivsete ja NULL-summade kontroll  [Link1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/5_V%C3%84IKSEIMAD%20TEHINGUD%20(osa1).png),  [Link2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/5_V%C3%84IKSEIMAD%20TEHINGUD%20(osa2).png)
-6. **Puuduvad kliendiandmed** — mitu tehingut on ilma `customer_id`-ta  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/6_PUUDUVAD_KLIENDIANDMED.png)
-7. **Tuleviku kuupäevad** — kas esineb andmesisestuse vigu  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/7_TULEVIKU_KUUP%C3%84EVADEGA_TEHINGUD.png)
-8. **Koondülevaade** — kõik kvaliteedinäitajad ühes päringus  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/pildid/8_KOOND%C3%9CLEVAADE.png) 
+1. **Tabeli maht** — mitu tehingut on andmestikus   [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/1_TABELI%20MAHT.png)
+2. **Tabeli struktuur** — millised veerud ja andmed on olemas   [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/2._TABELI%20STRUKTUUR.png)
+3. **Suurimad tehingud** — kogu andmestik (ebarealistlike väärtuste kontroll)  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/3_SUURIMAD%20TEHINGUD_KOGU%20ANDMESTIK.png)
+4. **Suurimad tehingud** — Tallinna kauplus eraldi  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/4_SUURIMAD%20TEHINGUD-TALLINNA%20KAUPLUS.png)
+5. **Väikseimad tehingud** — negatiivsete ja NULL-summade kontroll  [Link1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/5_V%C3%84IKSEIMAD%20TEHINGUD%20(osa1).png),  [Link2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/5_V%C3%84IKSEIMAD%20TEHINGUD%20(osa2).png)
+6. **Puuduvad kliendiandmed** — mitu tehingut on ilma `customer_id`-ta  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/6_PUUDUVAD_KLIENDIANDMED.png)
+7. **Tuleviku kuupäevad** — kas esineb andmesisestuse vigu  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/7_TULEVIKU_KUUP%C3%84EVADEGA_TEHINGUD.png)
+8. **Koondülevaade** — kõik kvaliteedinäitajad ühes päringus  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/8_KOOND%C3%9CLEVAADE.png) 
 (kasutasin `CASE WHEN` konstruktsiooni, mida uurisin iseseisvalt väljaspool kohustuslikku materjali)
 
 ## Peamised leiud
