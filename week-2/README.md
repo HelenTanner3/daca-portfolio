@@ -77,8 +77,8 @@ See nädal õpetas mulle, et andmete puhastamine nõuab palju täpsust ja kannat
  - **Puuduvate e-mailide strateegia**                         →  äriline otsus: kas koguda aktiivselt või märkida "puudub" staatusesse
 
 ## Failid
-- [week2_customers_cleaning.sql](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning.sql) — kõik SQL päringud koos kommentaaride, leidude ja järeldustega
-- [W2_Cleaning_log](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_Cleaning_log) - SQL puhastamine - logi sissekanded 
+- [week2_customers_cleaning.sql](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning.sql) & [Supabase Link](https://supabase.com/dashboard/project/zsqmwvrcpufdooxreamc/sql/de575193-7b2f-4edc-8d01-1d3324fcb260) — kõik SQL päringud koos kommentaaride, leidude ja järeldustega
+- [W2_Cleaning_log.md](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_Cleaning_log) & [Supabase Link](https://supabase.com/dashboard/project/zsqmwvrcpufdooxreamc/sql/36edc167-40e5-4e79-862e-c0e05bdb1b1f) - SQL puhastamine - logi sissekanded 
 - [W2 Daca-Group-UrbanStyle.ltd](https://github.com/Kolju3/DACA-group/tree/main/week-2/group) - Operatsioonide osakond - Nädal 2: Andmekvaliteedi audit ja SQL puhastamine - Presentatsioon & Readme 
 
 ## Järgmised sammud
