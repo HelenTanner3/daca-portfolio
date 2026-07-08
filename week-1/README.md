@@ -56,9 +56,10 @@ Suurim risk ärianalüüsi kvaliteedile on negatiivsete tehingute
 koguväärtus **-88 632,61 EUR**, mille olemus vajab selgitamist.
 
 ## Failid
-- [`week1_GT_A_HT_Sales_Data_Explorer- LINK Supabase`](https://supabase.com/dashboard/project/xwmwqxqorsiauliaynkk/sql/58cc5d93-1d3c-4025-81a8-ceb093a8d149)
-- [`week1_GT_A_HT_Sales_Data_Explorer.sql`](https://github.com/Kolju3/DACA-group/blob/main/week-1/individual/helen/week1_GT_A_HT_Sales_Data_Explorer.sql)
-- (kõik SQL päringud koos kommentaaride ja tulemustega)
+ -  [`week1_GT_A_HT_Sales_Data_Explorer.sql`](https://github.com/Kolju3/DACA-group/blob/main/week-1/individual/helen/week1_GT_A_HT_Sales_Data_Explorer.sql), [`LINK Supabase`](https://supabase.com/dashboard/project/xwmwqxqorsiauliaynkk/sql/58cc5d93-1d3c-4025-81a8-ceb093a8d149) -kõik SQL päringud koos kommentaaride ja tulemustega
+
+- [W1 Daca-Group-UrbanStyle.ltd](https://github.com/Kolju3/DACA-group/tree/main/week-1/group) - Operatsioonide osakond - Nädal 1: Müügi- ja Tooteandmete Audit - Presentatsioon & Readme 
+
 
 ## Järgmised sammud
 Nädal 2-s õpime andmete puhastamist — seal saame 
