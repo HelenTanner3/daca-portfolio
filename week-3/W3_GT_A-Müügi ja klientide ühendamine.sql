@@ -1,7 +1,6 @@
 -- ============================================================
 -- DACA Nädal 3 — SQL JOINs
 -- Roll A: Müük + Kliendid (INNER JOIN)
--- Fail: week3_roll_a_myyk_kliendid.sql
 -- Eesmärk: leida ostnud kliendid, TOP kliendid kogumüügi järgi,
 --          linnade ja lojaalsustasemete müügitulemus.
 -- Tabelid: sales, customers
@@ -12,8 +11,8 @@
 -- 0. EELDUSKONTROLL
 -- W3 JOINid eeldavad, et W2 puhastus on originaaltabelitesse viidud.
 -- GT juhendi kontrollväärtused:
---   sales ridu peaks olema ligikaudu 10 118
---   customers.city unikaalseid väärtusi peaks olema 12
+--   sales ridu peaks olema ligikaudu 10 118 - OK
+--   customers.city unikaalseid väärtusi peaks olema 12 - OK
 -- Kui tulemused erinevad oluliselt, kontrolli enne JOIN-analüüsi W2 puhastust.
 -- ------------------------------------------------------------
 SELECT COUNT(*) AS sales_ridu
@@ -38,7 +37,7 @@ SELECT
 FROM sales s
 INNER JOIN customers c
     ON s.customer_id = c.customer_id
-ORDER BY s.total_price DESC
+ORDER BY s.total_price DESC;
 LIMIT 20;
 
 -- ------------------------------------------------------------
@@ -50,9 +49,8 @@ SELECT
     c.first_name || ' ' || c.last_name AS klient,
     c.city,
     COUNT(DISTINCT s.sale_id) AS ostude_arv,
-    ROUND(SUM(s.total_price), 2) AS kogumuuk,
-    ROUND(AVG(s.total_price), 2) AS keskmine_ost
-FROM sales s
+    SUM(s.total_price) AS kogumuuk
+   FROM sales s
 INNER JOIN customers c
     ON s.customer_id = c.customer_id
 GROUP BY
@@ -64,7 +62,7 @@ ORDER BY kogumuuk DESC
 LIMIT 10;
 
 -- ------------------------------------------------------------
--- 3. Müük linnade kaupa
+-- 3. Müügianalüüs linnade kaupa
 -- Küsimus Annalt: millisest linnast tuleb enim müüke?
 -- Kommentaar tulemuse lugemiseks: ORDER BY kogumuuk DESC toob suurima müügiga linna esimeseks.
 -- ------------------------------------------------------------
@@ -72,8 +70,7 @@ SELECT
     c.city AS linn,
     COUNT(DISTINCT c.customer_id) AS kliente,
     COUNT(DISTINCT s.sale_id) AS oste,
-    ROUND(SUM(s.total_price), 2) AS kogumuuk,
-    ROUND(AVG(s.total_price), 2) AS keskmine_ost
+    SUM(s.total_price) AS kogumuuk
 FROM sales s
 INNER JOIN customers c
     ON s.customer_id = c.customer_id
@@ -88,14 +85,12 @@ ORDER BY kogumuuk DESC;
 SELECT
     c.loyalty_tier,
     COUNT(DISTINCT c.customer_id) AS kliente,
-    COUNT(DISTINCT s.sale_id) AS oste,
-    ROUND(SUM(s.total_price), 2) AS kogumuuk,
-    ROUND(AVG(s.total_price), 2) AS keskmine_ost
+    SUM(s.total_price) AS kogumüük
 FROM sales s
 INNER JOIN customers c
     ON s.customer_id = c.customer_id
 GROUP BY c.loyalty_tier
-ORDER BY kogumuuk DESC;
+ORDER BY kogumüük DESC;
 
 -- ------------------------------------------------------------
 -- 5. Lisakontroll: kui palju sales ridu jäi INNER JOINist välja?
@@ -119,26 +114,22 @@ SELECT
 -- Ärikeel: need kliendid võivad olla VIP/lojaalsuskampaania sihtrühm.
 -- ------------------------------------------------------------
 SELECT
-    c.first_name || ' ' || c.last_name AS klient,
-    c.city,
-    ROUND(SUM(s.total_price), 2) AS kogumuuk
+    c.first_name || ' ' || c.last_name AS klient, c.city,
+    SUM(s.total_price) AS kogumüük
 FROM sales s
 INNER JOIN customers c
     ON s.customer_id = c.customer_id
 GROUP BY
-    c.customer_id,
-    c.first_name,
-    c.last_name,
-    c.city
+    c.customer_id, c.first_name, c.last_name, c.city
 HAVING SUM(s.total_price) > (
-    SELECT AVG(kliendi_muuk)
+    SELECT AVG(kliendi_müük)
     FROM (
         SELECT
             customer_id,
-            SUM(total_price) AS kliendi_muuk
+            SUM(total_price) AS kliendi_müük
         FROM sales
         WHERE customer_id IS NOT NULL
         GROUP BY customer_id
     ) AS keskmised
 )
-ORDER BY kogumuuk DESC;
+ORDER BY kogumüük DESC;
