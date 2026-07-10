@@ -99,6 +99,12 @@ Analüüsi täpsustamiseks oleks vaja järgmisi andmeid:
 - miinimum- ja maksimumvaru poliitika;
 - kampaaniate või allahindluste info.
 
+## Grupitöö ühine kaust
+
+Minu Roll C analüüs on osa Nädal 3 grupitööst. Kogu meeskonna ühine README, koondmaterjalid ja presentatsioon asuvad siin:
+
+- [DACA-group / week-3 / group](https://github.com/Kolju3/DACA-group/tree/main/week-3/group)
+
 ## Failid
 
 Allolevad lingid viitavad minu isikliku portfoolio `week-3` kaustale:
