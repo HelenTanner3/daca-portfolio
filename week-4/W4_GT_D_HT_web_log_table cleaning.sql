@@ -199,6 +199,14 @@ INSERT INTO cleaning_log (table_name, action, rows_affected, details)
 SELECT 'web_logs', 'source väärtuste standardiseerimine source_clean veergu', COUNT(*), 'Testtabelis kontrollitud puhastusloogika rakendati production-tabelis; algne source säilitati.'
 FROM web_logs;
 
+
+-- Kuvab web_logs ja web_logs_test puhastamise logikirjed ajalises järjekorras.
+SELECT log_timestamp, table_name, action, rows_affected, details
+FROM cleaning_log
+WHERE table_name IN ('web_logs', 'web_logs_test')
+ORDER BY log_timestamp;
+
+
 /*
 LÕPPKONTROLL:
 [x] Algne source veerg on säilinud.
