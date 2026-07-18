@@ -207,7 +207,7 @@ Suurimad kuud:
 Kanalite kuised tipud:
 
 - `google_organic` suurim kuine käive oli 2024. aasta oktoobris: 38 158,24 €;
-- 2024. aasta detsembris kasvas `google_organic` käive 100,1%;
+- `google_organic` käive kasvas 2024. aasta detsembris 100,1%;
 - `facebook_ads` käive kasvas 2024. aasta detsembris 103,7%;
 - `instagram` käive kasvas 2024. aasta detsembris 125,9%;
 - `google_organic` suurim langus oli 2024. aasta novembris: −51,6%.
@@ -264,6 +264,6 @@ Valideeritud tulemuste järgi on:
 - suurima müügiga kliendi kohta tuvastatud kanal `facebook_ads`;
 - suurima keskmise tellimusega kanal `instagram`;
 - suurim andmekvaliteedi risk kanalita grupp `unknown`;
-- 2024. aasta müügimaht ligikaudu viiendiku võrra suurem kui 2023. aastal.
+- müügimaht oli ligikaudu viiendiku võrra suurem 2024. aastal võrreldes 2023. aastaga.
 
 Neid tulemusi tuleb käsitleda kanalite efektiivsuse, mitte tegeliku ROI hinnanguna.
