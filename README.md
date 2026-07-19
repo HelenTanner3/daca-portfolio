@@ -1,19 +1,32 @@
-# DACA Portfoolio -- Helen Tanner
+# DACA andmeanalüütiku portfoolio – Helen Tanner
 
-## Minust
-Mulle on IT süsteemid ja protsesside automatiseerimise võimalused alati hingelähedased olnud. Praegune fookus on õppida sügavuti andmete analüüsimise võimalusi ning paremini mõista, kuidas SQL, BI tööriistad ja automatiseerimine toetavad juhtimisotsuseid ja protsesside arendamist.
+## Portfoolio eesmärk
 
-## Eesmärk
-Õppida andmeanalüüsi -- SQL, Python, visualiseerimine -- ja ehitada professionaalne portfoolio.
+Lühike professionaalne tutvustus:
+- finantsjuhtimise ja kontrollingu taust;
+- areng andmeanalüüsi, SQL-i, Power BI ja Pythoni suunas;
+- fookus juhtimisinfo ja andmepõhise otsustamise toetamisel.
 
-## Nädala kaupa
-| Nädal | Teema | Staatus |
-|-------|-------|---------|
-| 0 | Onboarding | Valmis |
-| 1 | SQL Basics | Valmis|
-| 2 | SQL Cleaning | Valmis |
-| 3 | SQL JOINs | Valmis |
-| 4 | SQL Aggregation | Käimas |
-| 5-6 | Visualiseerimine | Tulemas |
-| 7-8 | Python | Tulemas |
-| 9-10 | Portfoolio + Karjäär | Tulemas |
+## Projektid nädalate kaupa
+
+| Nädal | Teema | Minu töö | Staatus |
+|---|---|---|---|
+| [Nädal 0](week-0/) | Töökeskkond ja GitHub | Arenduskeskkonna seadistamine | Valmis |
+| [Nädal 1](week-1/) | SQL alused | Müügiandmete uurimine | Valmis |
+| [Nädal 2](week-2/) | SQL puhastamine | Kliendiandmete puhastamine | Valmis |
+| [Nädal 3](week-3/) | SQL JOIN-id | Toodete ja inventuuri analüüs | Valmis |
+| [Nädal 4](week-4/) | SQL agregatsioon | Turunduskanalite efektiivsuse analüüs | Käimas |
+| Nädal 5 | Visualiseerimine: disain | Power BI dashboard | Tulemas |
+| Nädal 6 | Visualiseerimine: andmelugu | Dashboardi viimistlemine ja avaldamine | Tulemas |
+| Nädal 7 | Python ja pandas | RFM-analüüsi notebook | Tulemas |
+| Nädal 8 | Python API ja automaatika | Andmetöötluse pipeline | Tulemas |
+| Nädal 9 | Karjääriks valmistumine | CV, LinkedIn ja portfoolio viimistlemine | Tulemas |
+| Nädal 10 | Portfoolio kaitsmine | Tervikportfoolio ja lõpuesitlus | Tulemas |
+
+## Kasutatud tehnoloogiad
+
+SQL · PostgreSQL · Supabase · Git · GitHub · Power BI · Python · pandas
+
+## Meeskonnatöö
+
+[Operations Intelligence grupiportfoolio](https://github.com/Kolju3/DACA-group)
