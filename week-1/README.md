@@ -1,67 +1,39 @@
-# Nädal 1: SQL Põhitõed — Müügiandmete Kvaliteedikontroll
+# Nädal 1: SQL põhitõed — müügiandmete uurimine
 
-## Kontekst
-IT-juht Toomas Kask kahtlustab, et UrbanStyle.ltd müügiandmetes 
-esineb kvaliteediprobleeme. Enne ärianalüüsi kasutamist tuli 
-kontrollida andmestiku usaldusväärsust.
+## Eesmärk
 
-## Roll grupitöös
-**Roll A: Müügiandmete uurija** — meeskond Operations Intelligence
+UrbanStyle.ltd IT-juht vajas enne edasist analüüsi ülevaadet `sales` tabeli mahust, struktuurist ja peamistest andmekvaliteedi riskidest.
 
-Uurisin `sales` tabelit müügitehingute mahu, struktuuri ja 
-andmekvaliteedi vaatenurgast (summad, kuupäevad, kogused).
+## Minu roll
 
-## Kasutatud tööriistad
-- **SQL / PostgreSQL** — andmepäringud 
-- **Supabase** — andmebaas pilves
-- **VS Code** — päringute kirjutamine ja salvestamine
-- **GitHub** — koodi versioonihaldus ja portfoolio
+**Roll A — müügiandmete uurija** meeskonnas Operations Intelligence.
 
-## Tehtud analüüs
-Kirjutasin 8 SQL päringut, mis kontrollisid:
+Uurisin SQL-i abil müügitehingute arvu ja struktuuri, suurimaid ja väikseimaid tehinguid, puuduvaid `customer_id` väärtusi ning tuleviku kuupäevaga kirjeid.
 
-1. **Tabeli maht** — mitu tehingut on andmestikus   [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/1_TABELI%20MAHT.png)
-2. **Tabeli struktuur** — millised veerud ja andmed on olemas   [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/2._TABELI%20STRUKTUUR.png)
-3. **Suurimad tehingud** — kogu andmestik (ebarealistlike väärtuste kontroll)  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/3_SUURIMAD%20TEHINGUD_KOGU%20ANDMESTIK.png)
-4. **Suurimad tehingud** — Tallinna kauplus eraldi  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/4_SUURIMAD%20TEHINGUD-TALLINNA%20KAUPLUS.png)
-5. **Väikseimad tehingud** — negatiivsete ja NULL-summade kontroll  [Link1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/5_V%C3%84IKSEIMAD%20TEHINGUD%20(osa1).png),  [Link2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/5_V%C3%84IKSEIMAD%20TEHINGUD%20(osa2).png)
-6. **Puuduvad kliendiandmed** — mitu tehingut on ilma `customer_id`-ta  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/6_PUUDUVAD_KLIENDIANDMED.png)
-7. **Tuleviku kuupäevad** — kas esineb andmesisestuse vigu  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/7_TULEVIKU_KUUP%C3%84EVADEGA_TEHINGUD.png)
-8. **Koondülevaade** — kõik kvaliteedinäitajad ühes päringus  [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-1/kuvatõmmised/8_KOOND%C3%9CLEVAADE.png) 
-(kasutasin `CASE WHEN` konstruktsiooni, mida uurisin iseseisvalt väljaspool kohustuslikku materjali)
+## Peamised tulemused
 
-## Peamised leiud
+- `sales` tabelis oli **15 234 müügirida**.
+- **305 tehingut** olid negatiivse summaga; nende koguväärtus oli **−88 632,61 eurot**.
+- **1 487 tehingul** ehk ligikaudu **9,8%-l** puudus `customer_id`.
+- Leiti **2 tuleviku kuupäevaga tehingut**.
 
-| Näitaja | Tulemus |
-|---------|---------|
-| Tehinguid kokku | 15 234 |
-| Puuduvad `customer_id` väärtused | 1 487 (~9,8%) |
-| Negatiivsed summad | 305 tehingut (~2,0%) |
-| Negatiivsete tehingute koguväärtus | -88 632,61 EUR |
-| Tuleviku kuupäevaga tehingud | 2 |
-| NULL- või 0-summaga tehingud | 0 |
-| Suurim tehing | 2 170,40 EUR |
+## Järeldus
 
-## Järeldused
-Andmestik on valdavalt kasutuskõlblik — suuri struktuurseid 
-probleeme ei tuvastatud.
+Andmestik sobib esmaseks uurimiseks, kuid enne käibe-, perioodi- ja kliendianalüüsi kasutamist tuleb määratleda negatiivsete tehingute käsitlus, kontrollida tuleviku kuupäevad ning arvestada puuduvate kliendiseoste mõjuga.
 
-Enne ärianalüüsi kasutamist soovitan:
-- selgitada **negatiivsete tehingute** olemus 
-  (tagastused, kreeditarved või andmevead?)
-- kontrollida **2 tuleviku kuupäevaga** tehingu põhjuseid
-- hinnata **puuduva `customer_id`** mõju kliendianalüüsile
+## Kasutatud oskused ja tööriistad
 
-Suurim risk ärianalüüsi kvaliteedile on negatiivsete tehingute 
-koguväärtus **-88 632,61 EUR**, mille olemus vajab selgitamist.
+`SELECT`, `WHERE`, `ORDER BY`, `LIMIT`, `COUNT`, `SUM` ja täiendavas koondpäringus `CASE WHEN`; PostgreSQL / Supabase, VS Code ning GitHub.
 
-## Failid
- -  [`week1_GT_A_HT_Sales_Data_Explorer.sql`](https://github.com/Kolju3/DACA-group/blob/main/week-1/individual/helen/week1_GT_A_HT_Sales_Data_Explorer.sql), [`LINK Supabase`](https://supabase.com/dashboard/project/xwmwqxqorsiauliaynkk/sql/58cc5d93-1d3c-4025-81a8-ceb093a8d149) -kõik SQL päringud koos kommentaaride ja tulemustega
+## AI kasutamine
 
-- [W1 Daca-Group-UrbanStyle.ltd](https://github.com/Kolju3/DACA-group/tree/main/week-1/group) - Operatsioonide osakond - Nädal 1: Müügi- ja Tooteandmete Audit - Presentatsioon & Readme 
+AI-d kasutasin nädala jooksul õppematerjalide mõtestamisel, SQL-päringute loogika ja võimalike vigade kontrollimisel ning artefakti ja dokumentatsiooni vormistamisel.
 
+## Artefaktid
 
-## Järgmised sammud
-Nädal 2-s õpime andmete puhastamist — seal saame 
-negatiivsete tehingute ja puuduvate kliendiandmetega 
-edasi tegeleda.
+- [SQL-päringud](week1_role_a_sales_exploration.sql)
+- [Detailne analüüs](analysis.md)
+- [Tulemuste kuvatõmmised](screenshots/)
+- [Meeskonna ühine Nädal 1 töö](https://github.com/Kolju3/DACA-group/tree/main/week-1/group)
+
+> **Märkus.** Kuvatõmmistel nähtav SQL-päringu algne nimi erineb GitHubis kasutatavast failinimest, sest failid nimetasin portfoolio korrastamisel ümber. Päringute sisu ja ajaloolisi tulemusi ei muudetud.
