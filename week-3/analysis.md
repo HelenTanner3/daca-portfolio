@@ -62,7 +62,7 @@ Tulemus näitab ainult seda, et vastavaid tooteid müügitabelis ei leitud. Sell
 
 **Tõendusmaterjalid:**
 
-- [Müümata toodete loend](screenshots/01_unsold_products.png)
+- [Müümata toodete loend — LEFT JOIN](screenshots/01_unsold_products_left_join.png)
 - [Müümata toodete arv](screenshots/02_unsold_products_count.png)
 
 ### 4.3. Müügianalüüs kategooriate kaupa
@@ -77,10 +77,9 @@ Tulemus näitab ainult seda, et vastavaid tooteid müügitabelis ei leitud. Sell
 
 Suurima kogumüügi andis `jalanõusid`, kuid kõige rohkem müügiridu oli kategoorias `meeste_riided`. Seega ei kirjelda müügikordade arv ja müügiväärtus sama nähtust ning neid tuleb otsuste tegemisel eraldi vaadata.
 
-**Tõendusmaterjalid:**
+**Tõendusmaterjal:**
 
-- [Kategooriate müügikoond A](screenshots/04a_category_sales_summary.png)
-- [Kategooriate müügikoond B](screenshots/04b_category_sales_summary.png)
+- [Kategooriate müügikoond](screenshots/04_category_sales_summary.png)
 
 ### 4.4. TOP 10 toodet kogumüügi järgi
 
@@ -256,4 +255,4 @@ Need failid ei ole minu ametliku Roll C põhiartefakti osa.
 
 ## 9. Ajaloolise töö ja failinimede märkus
 
-SQL-päringud ja kuvatõmmised pärinevad töö tegemise ning tulemuste esitlemise ajast. Portfoolio failid ja kaustad nimetati hiljem ühtse struktuuri järgi ümber. Analüüsi sisu ja tulemusi korrastamise käigus tagantjärele ei muudetud.
+SQL-päringud ja kuvatõmmised pärinevad töö tegemise ning tulemuste esitlemise ajast. Portfoolio failid ja kaustad nimetati hiljem ühtse struktuuri järgi ümber. Analüüsi sisu ja tulemusi korrastamise käigus tagantjärele ei muudetud
