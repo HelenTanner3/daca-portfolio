@@ -1,89 +1,44 @@
-# Nädal 2: SQL Puhastamine — Kliendiandmete Tervendamine
+# Nädal 2 — SQL-andmete puhastamine
 
-## Projektikontekst
-UrbanStyle.ltd on Eesti moeettevõte, mis on viimase kahe aastaga kasvanud **150%**. See kiire laienemine on tekitanud andmekaose, kus kolm eraldiseisvat süsteemi (e-pood, kassasüsteem ja varude haldus) ei räägi omavahel.
+## Eesmärk ja roll
 
-IT-direktor Toomas Kask on hoiatanud, et praeguseid numbreid ei saa usaldada. Minu roll teisel nädalal oli läbi viia andmete puhastamise "kirurgia", järgides ranget protsessi: 
-**Test → Verify → Log → Commit**.
+UrbanStyle’i teise nädala ülesanne oli kontrollida andmekvaliteeti turvalises testtabelis, dokumenteerida leiud ning valmistada andmed ette järgmise nädala JOIN-analüüsiks.
 
-## Minu roll: Kliendiandmete puhastaja (Roll B)
-**Meeskond:** Operations Intelligence
+Minu ametlik roll oli **Roll B — kliendiandmete puhastaja**. Töötasin `customers` tabeliga ja kasutasin töövoogu **Test → Verify → Log → Commit**.
 
-Minu fookuses oli `customers` tabeli auditeerimine ja ettevalmistamine puhastamiseks. Kuna andmete kustutamine on iseseisva töö faasis keelatud, tegutsesin esmalt "detektiivina" — tuvastasin vigade ulatuse ilma midagi muutmata.
+## Peamised tulemused
 
-See nädal õpetas mulle, et andmete puhastamine nõuab palju täpsust ja kannatlikkust — iga samm tuleb dokumenteerida ja kontrollida enne järgmise juurde liikumist.
+- `customers_test` loodi **3 150** reaga ja selle maht vastas algtabelile.
+- Leidsin **130 üleliigset kliendikirjet** korduvate mittetühjade e-posti aadresside põhjal.
+- Ees- ja perenimedes puuduvad väärtused puudusid.
+- Linnaväljal esines **54 algset kirjapilti**, mis koondusid **12 standardiseeritud linnanimeks**; **252 kliendirida** vajas vormingu parandamist.
+- E-posti aadress puudus **380 kliendil**, telefoninumber ei puudunud ühelgi kliendil.
+- Linnanimede standardiseerimine tehti esmalt testtabelis ja seejärel põhitabelis ning kontrolliti auditilogis.
 
-## Kasutatud tööriistad
-- **SQL / PostgreSQL** — andmepäringud ja puhastamine
-- **Supabase** — andmebaas pilves
-- **VS Code** — päringute kirjutamine ja salvestamine
-- **GitHub** — koodi versioonihaldus ja portfoolio
+## Järeldus
 
-## Kasutatud SQL tehnikad
-- `GROUP BY` & `HAVING` — duplikaatide leidmiseks
-- `IS NULL` & `FILTER (WHERE ...)` — puuduvate väärtuste 
-  tingimuspõhiseks loendamiseks
-- `INITCAP()` & `TRIM()` — tekstiväljade ühtlustamiseks
-- `COUNT(DISTINCT ...)` — unikaalsete kirjaviiside loendamiseks
-- `STRING_AGG()` — erinevate kirjaviiside koondamiseks
-- `CASE WHEN` — tunnuste lisamiseks vigaste ridade tuvastamisel
-- `UNION ALL` — koondülevaate koostamiseks
-- `CREATE TABLE AS` — turvalise testkeskkonna loomiseks
+Kõige otsesem aruandlusrisk oli linnanimede ebajärjekindlus, sest sama linn jagunes mitme kirjapildi vahel. Kõige suurema ärilise mõjuga andmelünk oli 380 puuduva e-posti aadressiga klienti, sest neid ei saa digikanalites tavapäraselt kaasata.
 
-## Tehtud analüüs
+Duplikaatsete e-posti aadresside käsitlemisel tuleb eristada puuduvat e-posti aadressi tegelikust korduvast aadressist ning otsustada enne kirjete ühendamist, milline kliendikirje säilitada.
 
-1. **Test-koopia loomine** — `customers_test` tabel algandmete kaitsmiseks, kontrollisin et ridade arv ühtib originaaliga (3 150 rida) [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/1%20Testkoopia%20loomine.png)
-2. **Duplikaatsete e-mailide tuvastamine** — leidsin kliendid, kes on süsteemi sisestatud mitu korda [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/2%20duplikaatsed%20e-mailid.png)
-3. **Puuduvate nimede kontrollimine** — NULL ja tühjade stringide tuvastamine kriitilistes väljades [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/3%20puuduvad%20nimed.png)
-4. **Linnanimede kaardistamine kahes etapis:**
-   - RAW vaade — linnanimede täpne seis andmebaasis [Link 1](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/4A%20linnade%20nimekujud%20(54rida).png), [Link_2](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/4B%20linnade%20nimekujud%20kaardistus%20(12rida).png)
-   - Probleemide kaardistamine — vigaste ridade loendamine ja eksportimine ecxel [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/W2_GT_B_HT_Customers_Cleaning_Linnanimed.xlsx)
-5. **Kontaktandmete terviklikkus** — telefoni ja e-maili puudumise kontroll [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/5%20puuduvad%20kontaktandmed.png)
-6. **Puhastusraport** — kõik leiud prioriteedi järgi koondatud ühte vaatesse [Link](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/kuvat%C3%B5mmised/6%20puhastamisraport.png)
+## Kasutatud oskused
 
-## Peamised leiud
+- `CREATE TABLE AS`
+- `GROUP BY` ja `HAVING`
+- `FILTER (WHERE ...)`
+- `TRIM()` ja `INITCAP()`
+- `COUNT(DISTINCT ...)` ja `STRING_AGG()`
+- `CASE WHEN` ja `UNION ALL`
+- puhastustoimingute kontrollimine ja logimine
 
-| Näitaja | Leitud probleemid | Prioriteet | Äriline mõju |
-|---------|-------------------|------------|--------------|
-| Puuduvad e-mailid | **380** (~12%) | **Kriitiline** | Turunduskampaaniad ei jõua nende klientideni |
-| Duplikaatsed e-mailid | **130** | **Kõrge** | Moonutab klientide koguarvu ja lojaalsusstatistikat |
-| Linnanimede ebakõlad | 42 liigset kirjaviisi, **252** rida (~8%) vajab parandust  | **Kõrge** | Piirkondlik müügianalüüs on ebausaldusvääre |
-| Puuduvad nimed | 0 | Puudub | Kõik kirjed on korras |
-| Puuduvad telefonid | 0 | Puudub | Kõik kirjed on korras |
-|**Kokku probleeme:**| **762 kirjet**| |**~24,2% kõigist klientidest**
+## AI kasutamine
 
-## Detailsemad leiud
+AI-d kasutasin koondraporti SQL-i vormistamise ja päringute kontrollimise abivahendina. Tulemused kontrollisin SQL-i väljundite, referentsväärtuste ja puhastustoimingute auditilogi abil.
 
-**Duplikaatsed e-mailid:**
-- 126 e-maili aadressi esineb 2 korda
-- 2 e-maili aadressi esineb 3 korda
-- Kokku 130 duplikaatset kirjet
+## Artefaktid
 
-**Linnanimede probleem:**
-- SQL-i loogika järgi on andmestikus **54 erinevat linna**
-- Tegelikult on unikaalseid linnanimesid ainult **12**
-- **42 "linna"** on tegelikult kordused tühikute ja suur/väiketähtede erinevustest (nt `' Tallinn'`, `'Tallinn '`, `'tallinn'`, `'TALLINN'`)
-- **252 kliendirida (~8%)** vajavad linnanimede parandamist
-
-## Olulisemad õppetunnid
-- **Andmete puhastamine on 80% tööajast** — puhtad andmed on usaldusväärse analüüsi alus
-- **SQL loogika vs inimloogika** — SQL-i jaoks on `'Tallinn'` ja `'tallinn'` täiesti erinevad objektid
-- **Test enne muutmist** — `CREATE TABLE AS` on lihtne viis algandmete kaitsmiseks
-- **UNION ALL vajab ORDER BY puhul veeru numbrit** — PostgreSQL ei luba `CASE WHEN` avaldist `UNION ALL` päringute `ORDER BY` osas, lahenduseks on lisada igasse `SELECT` lausesse eraldi sorteerimisnumber
-
-## Soovitatav puhastamise järjekord
- - **Linnanimede ühtlustamine** `INITCAP(TRIM())` abil       → kiire ja ohutu, mõjutab kohe aruandlust
- - **Duplikaatide eemaldamine** `ROW_NUMBER()` meetodiga     → nõuab ettevaatlikkust, Nädal 3 teema                                     → `Valmis`  06.juuli seisuga
- - **Puuduvate e-mailide strateegia**                         →  äriline otsus: kas koguda aktiivselt või märkida "puudub" staatusesse
-
-## Failid
-- [week2_customers_cleaning.sql](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_GT_B_HT_Customers_Cleaning.sql) & [Supabase Link](https://supabase.com/dashboard/project/zsqmwvrcpufdooxreamc/sql/de575193-7b2f-4edc-8d01-1d3324fcb260) — kõik SQL päringud koos kommentaaride, leidude ja järeldustega
-- [W2_Cleaning_log.md](https://github.com/HelenTanner3/daca-portfolio/blob/main/week-2/W2_Cleaning_log) & [Supabase Link](https://supabase.com/dashboard/project/zsqmwvrcpufdooxreamc/sql/36edc167-40e5-4e79-862e-c0e05bdb1b1f) - SQL puhastamine - logi sissekanded 
-- [W2 Daca-Group-UrbanStyle.ltd](https://github.com/Kolju3/DACA-group/tree/main/week-2/group) - Operatsioonide osakond - Nädal 2: Andmekvaliteedi audit ja SQL puhastamine - Presentatsioon & Readme 
-
-## Järgmised sammud
-Nädal 3-s õpime SQL JOIN-e — saame ühendada `customers`, `sales` ja `products` tabelid ning hakata vastama keerukamatele äriküsimustele. Lisaks rakendame 
-`ROW_NUMBER()` funktsiooni duplikaatide eemaldamiseks.
-
----
-*See projekt on osa DACA (Data Analyst Career Accelerator) programmist. Ettevõte UrbanStyle.ltd on fiktsioonalne, loodud õppeeesmärkidel.*
+- [Roll B SQL-puhastamisskript](week2_role_b_customer_cleaning.sql)
+- [Detailne analüüs](analysis.md)
+- [Puhastustoimingute auditilogi](week2_cleaning_log.md)
+- [Päringute tõendusmaterjalid](screenshots/)
+- [Meeskonna ühine Nädal 2 töö](https://github.com/Kolju3/DACA-group/tree/main/week-2/group)
