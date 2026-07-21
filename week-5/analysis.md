@@ -141,7 +141,7 @@ Enamik linnu kasvas. Aasta kokkuvõttes jäi ainult Valga 2023. aasta tasemele v
 
 Tühja linnaväärtust ei filtreeritud analüüsist välja, sest selle eemaldamisel kaoks oluline osa müügitulust.
 
-- 2024. aasta määramata linnaga müügitulu: **149 556,78 eurot**
+- 2024\. aasta määramata linnaga müügitulu: **149 556,78 eurot**
 - osakaal 2024. aasta kogukäibest: ligikaudu **10,2%**
 - kasv võrreldes 2023. aastaga: **25,8%**
 
@@ -158,8 +158,8 @@ Dashboard’i ülesehitus järgib visuaalset hierarhiat:
 
 Olulisemad disainiotsused:
 
-- 2024. aasta joon kasutab UrbanStyle’i teal-värvi `#009B8D`;
-- 2023. aasta on neutraalne hall võrdlusbaas;
+- 2024\. aasta joon kasutab UrbanStyle’i teal-värvi `#009B8D`;
+- 2023\. aasta on neutraalne hall võrdlusbaas;
 - legend asendati joonte lõpus olevate otsesiltidega;
 - eemaldati üleliigsed dekoratiivsed elemendid;
 - kogu vaade mahub ühele ekraanile;
@@ -169,7 +169,7 @@ Olulisemad disainiotsused:
 
 Linna slicer võimaldab valida ühe linna ning filtreerib:
 
-- 2024. aasta müügitulu KPI-d;
+- 2024\. aasta müügitulu KPI-d;
 - ostnud klientide arvu;
 - käibekasvu;
 - mõlema aasta kuist trendi.
@@ -180,10 +180,10 @@ Dashboard’i all olev **„Aasta põhisõnum”** kirjeldab kogu ettevõtte tul
 
 Töö käigus kontrollisin:
 
-- 2023. ja 2024. aasta kogusummade vastavust kuude summale;
+- 2023\. ja 2024. aasta kogusummade vastavust kuude summale;
 - kasvuprotsendi arvutusloogikat;
 - kuude kronoloogilist järjestust;
-- 2025. ja 2026. aasta välistamist põhivõrdlusest, sest need ei ole võrreldavad täisaastad;
+- 2025\. ja 2026. aasta välistamist põhivõrdlusest, sest need ei ole võrreldavad täisaastad;
 - linnasliceri mõju KPI-dele ja joondiagrammile;
 - tühja linnaväärtuse mõju kogukäibele.
 
@@ -193,7 +193,7 @@ Töö käigus kontrollisin:
 - Dashboard näitab, et käive kasvas, kuid ei selgita täielikult, kas kasvu vedas klientide arvu, ostusageduse või keskmise ostukorvi muutus.
 - Ostnud klientide arv on esitatud ainult 2024. aasta kohta; kliendibaasi aastase kasvu hindamiseks tuleks võrrelda ka 2023. aasta näitajat.
 - Staatiline aasta põhisõnum ei muutu koos linnasliceriga.
-- 2025. ja 2026. aasta osalisi perioode ei kasutatud täisaastate võrdluses.
+- 2025\. ja 2026. aasta osalisi perioode ei kasutatud täisaastate võrdluses.
 
 ## 11. Järeldus
 
