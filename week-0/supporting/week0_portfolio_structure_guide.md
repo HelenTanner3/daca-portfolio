@@ -133,7 +133,7 @@ Ava `README.md` ja leia see rida:
 Muuda see:
 
 ```markdown
-| Olga Leisbblous | Windows | Roll C – NotebookLM Seadistaja | [@OlgaKasutajanimi](https://github.com/OlgaKasutajanimi) |
+| Olga Leisbblous | Windows | Roll C – NotebookLM Seadistaja | [@oleisbblous](https://github.com/oleisbblous)|
 ```
 
 Siis:
