@@ -1,4 +1,4 @@
-﻿# Nädal 5: visualiseerimise disain — CEO müügidashboard
+# Nädal 5: visualiseerimise disain — CEO müügidashboard
 
 ## Eesmärk
 
@@ -45,3 +45,7 @@ Kasutasin AI-d DAX-mõõdikute koostamise kontrollimiseks, dashboard’i paigutu
 - [Detailne analüüs](analysis.md)
 - [Dashboard’i kuvatõmmis](screenshots/urbanstyle_week5_dashboard_Helen.png)
 - [Analüüsi toetavad tabelid](screenshots/urbanstyle_week5_dashboard_helen_validation_tables.png)
+
+## Meeskonna ühine töö
+
+- [UrbanStyle’i nädala 5 meeskonnatöö](https://github.com/Kolju3/DACA-group/tree/main/week-5)
