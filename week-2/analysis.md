@@ -1,30 +1,208 @@
-| log_id | log_timestamp              | table_name              | action                                                       | rows_affected | details                                                                                                                                                                                       |
-| ------ | -------------------------- | ----------------------- | ------------------------------------------------------------ | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1      | 2026-07-06 08:43:13.274035 | BackUp tabelite loomine | products_backup, sales_backup, customers_backup              | 18746         | backupid taastamiseks vajadusel                                                                                                                                                               |
-| 2      | 2026-07-06 09:15:28.300444 | Sales_test              | Sales_test tabeli loomine Sales tabelist                     | 15234         | testtabeli loomine ning ridade võrdlus Sales & Sales_test, ridade arv oli võrdne                                                                                                              |
-| 3      | 2026-07-06 09:41:34.016822 | Sales_test              | Sales_test dublikaatide kontroll                             | 5116          | tSELECT COUNT(*) AS duplikaat_read FROM sales_test WHERE id NOT IN (SELECT MIN(id) FROM sales_test GROUP BY invoice_id);                                                                      |
-| 4      | 2026-07-06 09:45:57.21404  | Sales_test              | NULL väärtused kriitilistes väljades                         | 1487          | NULL väärtused kriitilistes väljades: Customer_ID puudu 1487 juhul, sale_date & total_price NULL väärtusi ei esine                                                                            |
-| 5      | 2026-07-06 09:49:50.871265 | Sales_test              | kuupäevade formaadi kontroll                                 | 0             | tuleviku kuupäevasid ei esine.                                                                                                                                                                |
-| 6      | 2026-07-06 10:02:53.745784 | Sales_test              | dublikaatide kustutamine                                     | 5116          | Kustutan duplikaadid päringuga mis jätab alles ainult esimese rea iga invoice_id kohta, kontrollin peale toingut ridade arvu mis on 10 118. Vahe algse 15 234-10 118=5116. Klapib.            |
-| 7      | 2026-07-06 10:12:30.951527 | Sales_test              | NULL väärtused customer_id=külalisostud                      | 489           | Külalisostud 998 = NULL väärtused customer_id, ennem dublikaatide kustutamist oli 1487. Dublikaatidest 489                                                                                    |
-| 8      | 2026-07-06 10:25:33.304362 | Sales_test              | Lisakontroll_customer_id_puhas & unikaalsete invoice_id arv  | 10118         | mõlema päringu väärtus on 10 118, mis on ootuspärane tulemus ning võib lugeda testitud dublikaatkannete kustutamise edukaks. Järgmine samm on teostada dublikaatide kustutamine Sales tabelis |
-| 9      | 2026-07-06 10:36:08.634189 | Sales_test              | NULL customer_id                                             | 998           | need on külalisostud — kehtiv äriloogika                                                                                                                                                      |
-| 10     | 2026-07-06 10:45:07.894128 | Sales                   | Ridade arvu kontroll                                         | 15234         | ridade arv tabelis Sales ennem dublikaatide kustutamist                                                                                                                                       |
-| 11     | 2026-07-06 10:47:25.350116 | Sales                   | dublikaatide kontroll                                        | 5116          | SELECT COUNT(*) AS duplikaat_read FROM sales WHERE id NOT IN (SELECT MIN(id) FROM sales GROUP BY invoice_id);                                                                                 |
-| 12     | 2026-07-06 10:48:54.210068 | Sales                   | NULL väärtused kriitilistes väljades                         | 1487          | NULL väärtused kriitilistes väljades: Customer_ID puudu 1487 juhul, sale_date & total_price NULL väärtusi ei esine;                                                                           |
-| 13     | 2026-07-06 10:49:32.551575 | Sales                   | kuupäevade formaadi kontroll                                 | 0             | tuleviku kuupäevasid ei esine.                                                                                                                                                                |
-| 14     | 2026-07-06 11:00:05.049402 | Sales                   | dublikaatide kustutamine                                     | 5116          | Kustutan duplikaadid päringuga mis jätab alles ainult esimese rea iga invoice_id kohta, kontrollin peale toingut ridade arvu mis on 10 118. Vahe algse 15 234-10 118=5116. Klapib.            |
-| 15     | 2026-07-06 11:02:44.3268   | Sales                   | Lisakontroll_customer_id_puhas & unikaalsete invoice_id arv  | 10118         | mõlema päringu väärtus on 10 118, mis on ootuspärane tulemus ning võib lugeda dublikaatkannete kustutamise edukaks prodaction keskkonnas, Sales tabelis. OK                                   |
-| 16     | 2026-07-06 11:17:05.104293 | Sales                   | NULL customer_id                                             | 998           | need on külalisostud — kehtiv äriloogika. OK                                                                                                                                                  |
-| 17     | 2026-07-06 12:39:11.626585 | customers_test          | "customers_test" tabeli loomine "customers" tabelist         | 3150          | Kontrollin, et koopia õnnestus — ridade arv peab ühtima algandmetega. OK                                                                                                                      |
-| 18     | 2026-07-06 12:44:13.153078 | customers_test          | Duplikaadid - e-mailid                                       | 130           | korduvaid e-maile: 126 e-maili aadressi esineb andmestikus 2- kordselt ning 2 e-maili aadressi esineb 3- kordselt                                                                             |
-| 19     | 2026-07-06 12:49:05.584591 | customers_test          | NULL-väärtuste ning tühjede stringide (') kontroll           | 0             | puuduvate ees- ja perenimede kontroll andis tulemuseks, et puuduvaid väärtusi ei esine                                                                                                        |
-| 20     | 2026-07-06 12:55:33.461842 | customers_test          | Linnanimede problemide kaardistamine                         | 54            | SQL-i loogika järgi on andmestikus 54 erinevat "linna" tulenevalt vormist, unikaalseid linnanimesid 12                                                                                        |
-| 21     | 2026-07-06 12:56:02.54589  | customers_test          | Linnanimede problemide kaardistamine                         | 12            | SQL-i loogika järgi on andmestikus 54 erinevat "linna" tulenevalt vormist, unikaalseid linnanimesid 12                                                                                        |
-| 22     | 2026-07-06 12:57:08.485522 | customers_test          | Linnanimede problemide kaardistamine                         | 252           | Klienditabel sisaldab kokku 3150 rida, neist 252 rida (8%) on vigaste linnanimedega ning vajavad parandamist                                                                                  |
-| 23     | 2026-07-06 13:02:57.05144  | customers_test          | Puuduvad kontaktandmed                                       | 380           | Puuduvaid e-mailid klientide registris                                                                                                                                                        |
-| 24     | 2026-07-06 13:04:26.217066 | customers_test          | Puuduvad kontaktandmed                                       | 0             | Puuduvaid telefone klientide registris ei esksiteeri                                                                                                                                          |
-| 25     | 2026-07-06 13:10:00.988153 | Customers_test          | Linnanimede ühtlustamine                                     | 42            | linnanimedE ühtlustamine INITCAP + TRIM abili                                                                                                                                                 |
-| 26     | 2026-07-06 13:13:18.418481 | Customers_test          | Linnanimede ühtlustamine                                     | 12            | linnanimede ühtlustamine INITCAP + TRIM abil järel kontroll, tulem 12 on ootuspärane. OK                                                                                                      |
-| 27     | 2026-07-06 13:17:40.751871 | Customers               | Linnanimede ühtlustamine                                     | 42            | linnanimede ühtlustamine INITCAP + TRIM abil                                                                                                                                                  |
-| 28     | 2026-07-06 13:18:24.760887 | Customers               | Linnanimede ühtlustamine                                     | 12            | linnanimede ühtlustamine INITCAP + TRIM abil järel kontroll, tulem 12 on ootuspärane. OK                                                                                                      |
+# Nädal 2 — kliendiandmete puhastamise detailanalüüs
+
+## 1. Eesmärk
+
+Nädal 2 keskendus andmekvaliteedi kontrollile ja puhastamisele. Minu ametlik roll oli **Roll B — kliendiandmete puhastaja** ning analüüsi objekt oli UrbanStyle’i `customers` tabel.
+
+Töö põhimõte oli:
+
+> Test → Verify → Log → Commit
+
+Kõigepealt tuli luua testkoopia, seejärel tuvastada probleemid, kontrollida tulemusi, teha valideeritud puhastustoimingud ja säilitada auditijälg.
+
+## 2. Kasutatud andmed ja artefaktid
+
+- lähtetabel: `customers`;
+- testtabel: `customers_test`;
+- analüüsitud kliendikirjeid: **3 150**;
+- põhiartefakt: [Roll B SQL-puhastamisskript](week2_role_b_customer_cleaning.sql);
+- auditijälg: [puhastustoimingute logi](week2_cleaning_log.md);
+- päringute väljundid: [screenshots/](screenshots/).
+
+Ajaloolist SQL-faili ega kuvatõmmiste sisu portfoolio korrastamisel ei muudeta. Korrastatakse dokumentatsioon, failinimed, kaustad ja suhtelised lingid.
+
+## 3. Testtabeli loomine
+
+Analüüs algas `customers_test` tabeli loomisega:
+
+```sql
+CREATE TABLE customers_test AS
+SELECT *
+FROM customers;
+```
+
+Seejärel võrreldi `customers_test` ja `customers` tabelite ridade arvu. Mõlemas tabelis oli **3 150 rida**, mistõttu testkoopia loomine loeti õnnestunuks.
+
+**Tõendusmaterjal:**
+
+- [Testtabeli loomine ja ridade kontroll](screenshots/01_test_table_created.png)
+
+## 4. Duplikaatsete e-posti aadresside kontroll
+
+Korduvad e-posti aadressid otsiti `GROUP BY` ja `HAVING` abil.
+
+Tulemuse selgem tõlgendus:
+
+- **126** e-posti aadressi esines kaks korda;
+- **2** e-posti aadressi esines kolm korda;
+- korduvates gruppides oli kokku **258 kliendirida**;
+- ühe kirje säilitamisel iga mittekasutamata e-posti aadressi kohta jääks **130 üleliigset kirjet**.
+
+Seega ei tähenda „130 duplikaati” 130 erinevat korduvat e-posti aadressi. Tegemist on korduvate gruppide üleliigsete ridade arvuga.
+
+**Tõendusmaterjal:**
+
+- [Duplikaatsed e-posti aadressid](screenshots/02_duplicate_emails.png)
+
+### Kontrollipiirang
+
+Ajaloolises SQL-päringus puudub enne grupeerimist tingimus, mis välistaks `NULL`-i ja tühjad e-posti aadressid. PostgreSQL koondab kõik `NULL`-väärtused ühte gruppi, mistõttu tuleb puuduvad e-posti aadressid tegelikest duplikaatidest eraldi käsitleda.
+
+Korrektse tõlgenduse jaoks tuleb mittekasutamata aadresside duplikaate hinnata eraldi puuduvate kontaktandmete kontrollist. Ajaloolist SQL-faili selle portfoolio korrastamise käigus tagantjärele ei muudeta; piirang dokumenteeritakse siin.
+
+## 5. Puuduvate nimede kontroll
+
+Kontrolliti nii `NULL`-väärtusi kui ka tühje stringe.
+
+Tulemus:
+
+- puuduvad eesnimed: **0**;
+- puuduvad perenimed: **0**.
+
+Nimede täielikkus oli seega kontrollitud andmestikus hea.
+
+**Tõendusmaterjal:**
+
+- [Puuduvate nimede kontroll](screenshots/03_missing_names.png)
+
+## 6. Linnanimede kvaliteet
+
+### 6.1. Algsete nimekujude ülevaade
+
+Linnavälja algne grupeerimine andis **54 erinevat kirjapilti**. Sama linna käsitleti erineva väärtusena näiteks algus- või lõputühiku ning suur- ja väiketähtede erinevuse tõttu.
+
+**Tõendusmaterjal:**
+
+- [Linnanimede algsed variandid](screenshots/04a_city_name_variants.png)
+
+### 6.2. Standardiseerimise kaardistus
+
+Linnanimede standardiseerimise alus oli:
+
+```sql
+INITCAP(TRIM(city))
+```
+
+- `TRIM()` eemaldab nime algusest ja lõpust tühikud;
+- `INITCAP()` ühtlustab suur- ja väiketähtede kasutuse.
+
+Kaardistamise tulemus:
+
+- algseid kirjapilte: **54**;
+- standardiseeritud linnanimesid: **12**;
+- liigseid kirjapilte: **42**;
+- parandamist vajavaid kliendiridu: **252**, ligikaudu **8%** tabelist.
+
+**Tõendusmaterjalid:**
+
+- [Linnanimede standardiseerimise kaardistus](screenshots/04b_city_name_mapping.png)
+
+## 7. Kontaktandmete täielikkus
+
+Kontrolliti puuduvaid telefoni- ja e-posti väärtusi.
+
+Tulemus:
+
+- puuduvad telefoninumbrid: **0**;
+- puuduvad e-posti aadressid: **380**, ligikaudu **12%** klientidest.
+
+Puuduv e-posti aadress ei ole sama probleem mis korduv e-posti aadress. Need näitajad tuleb raportis eraldi hoida.
+
+**Tõendusmaterjal:**
+
+- [Puuduvate kontaktandmete kontroll](screenshots/05_missing_contact_details.png)
+
+## 8. Puhastamisraport
+
+SQL-is koostati `UNION ALL` abil koondvaade, mis tõi andmekvaliteedi probleemid ühte tabelisse ja järjestas need prioriteedi järgi.
+
+**Tõendusmaterjal:**
+
+- [Puhastamisraport](screenshots/06_cleaning_report.png)
+
+### Koondtulemuse tõlgendamise piirang
+
+Varasemas README-s liideti:
+
+- 130 üleliigset duplikaatkirjet;
+- 252 ebastandardse linnanimega rida;
+- 380 puuduva e-postiga rida.
+
+Nende summa on **762 probleemjuhtumit**, kuid seda ei tohi nimetada 762 unikaalseks probleemseks kliendiks ega kindlalt 24,2%-ks kliendibaasist. Sama kliendirida võib kuuluda mitmesse probleemikategooriasse.
+
+Portfoolio põhikokkuvõttes esitatakse kategooriad seetõttu eraldi.
+
+## 9. Edasijõudnute puhastamine ja W3 ettevalmistus
+
+Nädala juhendi edasijõudnute osa nägi ette puhastustoimingute tegemise testtabelis. Enne W3 JOIN-analüüsi tuli valideeritud puhastus viia ka põhitabelisse.
+
+[Puhastustoimingute auditilogi](week2_cleaning_log.md) dokumenteerib muu hulgas:
+
+- varukoopiate loomise;
+- `customers_test` tabeli loomise ja kontrolli;
+- linnanimede probleemi kaardistamise;
+- linnanimede standardiseerimise `customers_test` tabelis;
+- tulemuse kontrolli: **12 standardiseeritud linnanime**;
+- linnanimede standardiseerimise `customers` põhitabelis;
+- põhitabeli järelkontrolli: **12 standardiseeritud linnanime**.
+
+Auditilogi sisaldab lisaks kliendiandmetele ka W3 eel tehtud müügiandmete puhastustoiminguid. See säilitatakse eraldi nädala artefaktina, sest see tõendab puhastamise järjestust ja kontrollimist, mitte ainult Roll B lõppjäreldusi.
+
+### Auditilogi mõõdikute täpsustus
+
+Linnanimede kontroll tuvastas **252 parandamist vajavat kliendirida**, kuid auditilogi `rows_affected` väljal on standardiseerimise toimingu juures väärtus **42**. Logikirje detail seostab selle 42 liigse linnanime kirjapildiga. Kuna `rows_affected` veeru nimetus ja detailkirjeldus ei kasuta sama mõõdikut, säilitatakse ajalooline logi muutmata ning erinevus dokumenteeritakse siin.
+
+Usaldusväärne järelkontroll on see, et standardiseerimise järel jäi alles **12 linnanime**.
+
+## 10. Äriline mõju
+
+### Puuduvad e-posti aadressid
+
+380 klienti ei ole tavapäraselt e-turunduse kaudu kättesaadavad. Enne andmete täiendamist tuleb eristada, kas e-post puudub lubatud äriloogika tõttu või sisestus- ja migratsioonivea tõttu.
+
+### Korduvad e-posti aadressid
+
+Korduvad aadressid võivad:
+
+- suurendada näilist kliendiarvu;
+- jagada ühe kliendi ostuajaloo mitme `customer_id` vahel;
+- moonutada lojaalsus- ja korduvostuanalüüsi;
+- põhjustada dubleerivat kliendisuhtlust.
+
+Kirjeid ei tohi ühendada ainult e-posti aadressi põhjal ilma säilitatava kliendikirje reegli ja täiendava kontrollita.
+
+### Linnanimede ebajärjekindlus
+
+Linnanimede erinevad kirjapildid jagavad sama piirkonna tulemused mitme kategooria vahel. See mõjutab linnade ja piirkondade kaupa tehtavat müügi-, kliendi- ja turundusanalüüsi.
+
+## 11. Soovitused
+
+1. Hoida linnanimede standardiseerimine püsiva andmetöötlusreeglina.
+2. Kontrollida pärast iga puhastustoimingut ridade arvu ja standardiseeritud väärtuste arvu.
+3. Eristada duplikaatide kontrollis puuduvad e-posti aadressid mittetühjadest korduvatest aadressidest.
+4. Määrata enne kliendikirjete ühendamist selge säilitamisreegel.
+5. Käsitleda puuduvaid e-posti aadresse eraldi äriprotsessi ja andmekvaliteedi küsimusena.
+6. Säilitada puhastustoimingute auditilogi koos enne- ja pärast-kontrollidega.
+
+## 12. Peamine õppetund
+
+Andmete puhastamine ei tähenda ainult `UPDATE` või `DELETE` käsu käivitamist. Usaldusväärne protsess nõuab:
+
+- testkoopiat;
+- referentsväärtust enne muudatust;
+- kontrollitavat puhastusreeglit;
+- järelkontrolli;
+- auditijälge;
+- mõõdikute täpset defineerimist.
+
+W2 kõige olulisem tulemus oli arusaam, et tehniliselt töötav puhastuspäring ei ole piisav, kui pole selgelt teada, mida loetakse probleemiks, mitut unikaalset kirjet see puudutab ja kuidas tulemust kontrolliti.
