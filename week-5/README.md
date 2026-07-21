@@ -14,10 +14,10 @@ Minu ülesanne oli kujundada kõrgtaseme juhtimisvaade, millest tegevjuht saab m
 
 ## Peamised tulemused
 
-- 2024. aasta müügitulu oli **1 470 358,02 eurot**.
+- 2024\. aasta müügitulu oli **1 470 358,02 eurot**.
 - Käive kasvas 2023. aastaga võrreldes **19,1%**.
-- 2024. aastal tegi ostu **2 113 unikaalset klienti**.
-- 2024. aasta müügitulu ületas 2023. aasta taset kõigil kuudel.
+- 2024\. aastal tegi ostu **2 113 unikaalset klienti**.
+- 2024\. aasta müügitulu ületas 2023. aasta taset kõigil kuudel.
 - Linnade tulemused olid valdavalt positiivsed, kuid Valga aastane käive jäi veidi 2023. aasta tasemele alla.
 
 ## Järeldus
