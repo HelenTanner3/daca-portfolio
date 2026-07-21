@@ -1,25 +1,38 @@
-# Nädal 4 — turunduskanalite efektiivsuse detailne analüüs
+# Nädal 4 detailne analüüs — turunduskanalite agregatsioon
 
-## 1. Juhtkokkuvõte
+## 1. Analüüsi eesmärk
 
-Analüüsi eesmärk oli hinnata, millised UrbanStyle.ltd turunduskanalid seostuvad suurema kliendiarvu, tellimuste arvu ja käibega. Enne kanalite tulemuslikkuse hindamist tuli lahendada kaks andmekvaliteedi probleemi:
+Nädal 4 keskendus SQL-agregatsioonile. Minu ametlik põhiroll oli **Roll D — turunduskanalite efektiivsuse analüüs**.
 
-1. sama kanal oli `source` väljal esitatud mitme erineva kirjapildi ja lühendina;
-2. `web_logs` sisaldas ühe kliendi kohta mitut logirida, mistõttu otsene ühendamine `sales` tabeliga mitmekordistas müügitehinguid.
+Äriküsimus oli:
 
-`source` väärtused standardiseeriti uude `source_clean` veergu. Seejärel loodi valideeritud kanaliloogika, milles igale kliendile jäeti üks viimane teadaolev kanal. Valideeritud tulemuste summa ühtis täielikult `sales` tabeli kontrollväärtustega: 10 118 müüki ja 2 909 177,98 eurot käivet.
+> Millised turunduskanalid seostuvad suurima kliendiarvu, tellimuste arvu ja käibega ning millistes kanalites on suurim keskmine tellimusväärtus ja müük kliendi kohta?
 
-Suurima käibega tuvastatud kanal oli `google_organic`, suurima müügiga kliendi kohta `facebook_ads` ning suurima keskmise tellimusega `instagram`. Tegelikku ROI-d ei olnud võimalik arvutada, sest kampaaniate kulud puudusid.
+Tegeliku ROI arvutamine ei olnud võimalik, sest andmestikus puudusid kampaaniakulud. Seetõttu käsitletakse tulemusi kanalite müügimahu ja efektiivsusnäitajatena, mitte investeeringutasuvusena.
 
-## 2. Lähteandmed ja kontrollväärtused
+## 2. Juhendi nõuded ja täidetud väljund
 
-| Tabel | Roll analüüsis |
+Roll D juhend nõudis:
+
+1. turunduskanalite koondandmeid `GROUP BY` abil;
+2. kanali efektiivsuse arvutamist CTE ja `HAVING` abil;
+3. kanalite kuiseid trende;
+4. Kristile 3–5 koondnumbrit;
+5. SQL-faili, tulemuste tõendusmaterjale ja lühikest ärilist kokkuvõtet.
+
+Põhiartefakt `week4_role_d_marketing_aggregation.sql` sisaldab juhendi kolme päringut ning täiendavaid valideerimis- ja ristkontrollipäringuid.
+
+## 3. Kasutatud andmed
+
+| Tabel | Kasutus analüüsis |
 |---|---|
-| `sales` | müügitehingud, müügikuupäev ja tehingu väärtus |
-| `customers` | kliendi põhiandmed ja kliendiseos |
-| `web_logs` | veebikülastused, kanal, külastuse aeg ja kliendiseos |
-| `web_logs_test` | puhastusloogika kontrollimiseks loodud testkoopia |
-| `cleaning_log` | tehtud andmepuhastuse ja kontrollide logi |
+| `sales` | müügitehingud, müügikuupäev, klient ja `total_price` |
+| `customers` | kliendi põhiandmed ja ühendus müügiga |
+| `web_logs` | veebikülastuse allikas, külastuse aeg ja kliendiseos |
+| `web_logs_test` | kanalinimede puhastusloogika kontroll |
+| `cleaning_log` | puhastamis- ja kontrollitoimingute dokumenteerimine |
+
+Peamised referentsväärtused:
 
 | Kontrollnäitaja | Tulemus |
 |---|---:|
@@ -28,27 +41,38 @@ Suurima käibega tuvastatud kanal oli `google_organic`, suurima müügiga kliend
 | Unikaalseid `sale_id` väärtusi | 10 118 |
 | `sales` kogukäive | 2 909 177,98 € |
 
-## 3. `source` välja puhastamine
+## 4. Kanaliandmete standardiseerimine
 
-Algsel `source` väljal oli 19 väärtust. Osa neist tähistas sama kanalit, näiteks `Facebook` ja `FB`, `Facebook Ads` ja `fb_ads`, `Google Organic` ja `google_organic`.
+Algsel `source` väljal oli 19 väärtust. Sama sisuline kanal esines eri kirjapiltide ja lühenditena, näiteks:
 
-Algset `source` veergu ei muudetud. Standardväärtus lisati uude `source_clean` veergu. Tasuline reklaam ja orgaaniline või täpsustamata liiklus jäeti eraldi.
+- `Facebook` ja `FB`;
+- `Facebook Ads`, `facebook_ads` ja `fb_ads`;
+- `Google Organic`, `google organic` ja `google_organic`;
+- `IG`, `instagram` ja `Instagram`.
 
-Puhastus viidi läbi metoodikaga **Test → Verify → Log → Commit**:
+Algset välja ei kirjutatud üle. Analüüsiks loodi `source_clean`, kuhu väärtused koondati kümneks standardiseeritud kanaliks.
+
+Puhastus viidi läbi põhimõttel **Test → Verify → Log → Commit**:
 
 1. loodi `web_logs_test`;
-2. standardiseeriti testtabel;
-3. kontrolliti ridade arvu ja väärtuste vastendust;
+2. rakendati standardiseerimisloogika testtabelis;
+3. kontrolliti ridade arvu ja vastendusi;
 4. rakendati sama loogika `web_logs` tabelis;
-5. tegevused dokumenteeriti `cleaning_log` tabelis.
+5. toimingud logiti.
 
 | Näitaja | Enne | Pärast |
 |---|---:|---:|
 | Erinevaid kanaliväärtusi | 19 | 10 |
-| Tabeli ridade arv | 50 000 | 50 000 |
-| `source_clean` NULL väärtusi | – | 0 |
+| Tabeli ridu | 50 000 | 50 000 |
+| `source_clean` NULL-väärtusi | – | 0 |
 
-## 4. Veebilogide andmekvaliteet
+**Tõendusmaterjalid:**
+
+- [Veebilogide struktuur](screenshots/additional_01_web_logs_structure.png)
+- [Andmekvaliteedi ülevaade](screenshots/additional_02_web_logs_quality_summary.png)
+- [Standardiseeritud kanalite liiklus](screenshots/additional_03_standardized_channel_traffic.png)
+
+## 5. Veebilogide andmekvaliteet
 
 | Näitaja | Tulemus |
 |---|---:|
@@ -60,51 +84,58 @@ Puhastus viidi läbi metoodikaga **Test → Verify → Log → Commit**:
 | Esimene külastus | 17.01.2019 |
 | Viimane külastus | 28.02.2025 |
 
-Ligi viiendik logidest on anonüümsed ja neid ei saa `customer_id` abil müügiga siduda.
+Anonüümseid logisid ei saa `customer_id` abil müügiga siduda. Samuti võib ühel tuvastatud kliendil olla mitu logirida ja mitu kanalit.
 
-## 5. Standardiseeritud kanalite liiklus
+**Tõendusmaterjal:**
 
-| Kanal | Külastusi | Tuvastatud kliente |
-|---|---:|---:|
-| `google_organic` | 14 094 | 1 884 |
-| `direct` | 9 522 | 1 373 |
-| `facebook_ads` | 7 240 | 1 186 |
-| `instagram` | 5 577 | 958 |
-| `email_campaign` | 5 073 | 878 |
-| `google_ads` | 3 768 | 693 |
-| `tiktok` | 2 573 | 460 |
-| `google_unspecified` | 1 159 | 692 |
-| `facebook` | 579 | 371 |
-| `instagram_ads` | 415 | 271 |
+- [Kliendi logiridade ja kanalite korduvus](screenshots/additional_04_customer_channel_multiplicity.png)
 
-`google_organic` on nii külastuste kui ka tuvastatud klientide arvu järgi suurim kanal. Liikluse maht ei ole siiski konversioonimäär, sest külastusi ja müüke ei seota sama sessiooni või kampaania alusel.
+## 6. Juhendi päringute oluline piirang
 
-## 6. Otsese JOIN-i probleem
+Juhendi kolm põhipäringut ühendasid `sales`, `customers` ja `web_logs` tabelid kliendi kaudu. Need näitasid nõutud SQL-võtteid, kuid ühe kliendi mitu veebilogirida kordistasid sama müüki.
 
-Enne JOIN-i oli `sales` tabelis 10 118 müüki ja 2 909 177,98 eurot käivet.
+Seetõttu on juhendi päringute kuvatõmmised säilitatud ajaloolise töö ja õpiväljundi tõendina, kuid nende `SUM(total_price)` ja `AVG(total_price)` väärtusi ei kasutata lõplike juhtimisnumbritena.
 
-Otsene ühendamine `sales → customers → web_logs` andis:
+**Ajaloolised juhendipäringud:**
 
-- 121 131 JOIN-i rida;
-- 9 130 unikaalset müüki;
-- 34 527 628,19 eurot summeeritud käivet.
+- [Kanalite koondandmed — otsese JOIN-i tulemus](screenshots/query_01_channel_summary_unvalidated.png)
+- [Kanali efektiivsus CTE-ga — otsese JOIN-i tulemus](screenshots/query_02_channel_efficiency_cte_unvalidated.png)
+- [Kuised trendid — otsese JOIN-i tulemus](screenshots/query_03_monthly_trends_unvalidated.png)
+- [Kuised trendid CSV](screenshots/query_03_monthly_trends_unvalidated.csv)
 
-| Näitaja | Algne `sales` | Otsene JOIN | Mõju |
-|---|---:|---:|---:|
-| Ridu | 10 118 | 121 131 | 11,97 korda rohkem |
-| Unikaalseid müüke | 10 118 | 9 130 | 988 müüki vähem |
-| Käive | 2 909 177,98 € | 34 527 628,19 € | 11,87 korda suurem |
+## 7. JOIN-i kardinaalsuse kontroll
 
-Moonutusel oli kaks põhjust:
+Enne JOIN-i:
 
-1. `INNER JOIN customers` eemaldas müügid, millel ei olnud sobivat kliendikirjet;
-2. `LEFT JOIN web_logs` kordas iga säilinud müüki vastavalt kliendi logiridade arvule.
+| Kontroll | Tulemus |
+|---|---:|
+| Müügiridu | 10 118 |
+| Unikaalseid müüke | 10 118 |
+| Kogukäive | 2 909 177,98 € |
 
-`COUNT(DISTINCT sale_id)` võib tellimuste arvu osaliselt kaitsta, kuid `SUM(total_price)` ja `AVG(total_price)` jäävad valeks.
+Otsese `sales → customers → web_logs` ühendamise järel:
 
-## 7. Valideeritud omistamisloogika
+| Kontroll | Tulemus |
+|---|---:|
+| JOIN-i ridu | 121 131 |
+| Säilinud unikaalseid müüke | 9 130 |
+| Summeeritud käive | 34 527 628,19 € |
 
-Kliendi logiread järjestati:
+Mõju:
+
+- ridade arv kasvas 11,97 korda;
+- summeeritud käive kasvas 11,87 korda;
+- `INNER JOIN customers` jättis välja 988 müüki;
+- `COUNT(DISTINCT sale_id)` kaitses osaliselt tellimuste arvu, kuid `SUM` ja `AVG` jäid valeks.
+
+**Tõendusmaterjalid:**
+
+- [Müügitabeli referentsväärtused](screenshots/additional_05a_sales_reference_values.png)
+- [Otsese JOIN-i kontroll](screenshots/additional_05b_direct_three_table_join_validation.png)
+
+## 8. Valideeritud omistamisloogika
+
+Kliendi veebilogid järjestati:
 
 ```sql
 ROW_NUMBER() OVER (
@@ -113,72 +144,88 @@ ROW_NUMBER() OVER (
 )
 ```
 
-Analüüsi jäeti iga kliendi kohta `rea_number = 1`. Kõik kliendi müügid seoti tema viimase teadaoleva standardiseeritud kanaliga.
+Igale kliendile jäeti üks viimane teadaolev standardiseeritud kanal. Müükidega ühendamisel kasutati `LEFT JOIN`-i, et säilitada ka kliendivasteta müügid grupis `unknown`.
 
-Tugevus:
+Selle meetodi tugevus:
 
 - üks klient saab ühe kanalirea;
 - müügiread ei mitmekordistu;
-- lõpptulemuse tellimuste arv ja kogukäive ühtivad `sales` kontrollväärtusega.
+- lõpptulemuse tellimuste arv ja käive ühtivad `sales` referentsväärtustega.
 
 Piirang:
 
-- kanal ei ole seotud konkreetse tehingu ega sessiooniga;
-- viimane logi võib olla toimunud pärast kliendi varasemaid oste;
+- kanal ei ole seotud konkreetse tehingu või sessiooniga;
+- kliendi viimane veebiallikas võis olla hilisem kui osa tema oste;
 - tulemus näitab seost, mitte tõendatud põhjuslikku mõju.
 
-## 8. Valideeritud kanalitulemused
+## 9. Hilisem standardiseeritud kogu perioodi koond
 
-| Kanal | Kliente | Tellimusi | Käive | Käibe osakaal | Keskmine tellimus | Müük kliendi kohta |
-|---|---:|---:|---:|---:|---:|---:|
-| `google_organic` | 684 | 2 273 | 666 444,98 € | 22,91% | 293,20 € | 974,33 € |
-| `facebook_ads` | 351 | 1 635 | 469 933,25 € | 16,15% | 287,42 € | 1 338,84 € |
-| `direct` | 465 | 1 505 | 420 103,22 € | 14,44% | 279,14 € | 903,45 € |
-| `unknown` | 90 | 1 338 | 383 127,19 € | 13,17% | 286,34 € | 4 256,97 €* |
-| `email_campaign` | 275 | 1 024 | 300 296,85 € | 10,32% | 293,26 € | 1 091,99 € |
-| `instagram` | 259 | 877 | 262 112,79 € | 9,01% | 298,87 € | 1 012,02 € |
-| `google_ads` | 196 | 664 | 185 438,12 € | 6,37% | 279,27 € | 946,11 € |
-| `tiktok` | 127 | 463 | 127 929,88 € | 4,40% | 276,31 € | 1 007,32 € |
-| `google_unspecified` | 48 | 151 | 41 629,31 € | 1,43% | 275,69 € | 867,28 € |
-| `facebook` | 32 | 117 | 32 797,10 € | 1,13% | 280,32 € | 1 024,91 € |
-| `instagram_ads` | 24 | 71 | 19 365,29 € | 0,67% | 272,75 € | 806,89 € |
-| **Kokku** | **2 551** | **10 118** | **2 909 177,98 €** | **100,00%** | – | – |
+Praeguses põhi-SQL-is kasutatud `source_clean`-põhise kogu müügiperioodi koondi tulemused:
 
-\* `unknown` grupi müük kliendi kohta ei ole teiste kanalitega võrreldav. `COUNT(DISTINCT customer_id)` ei loenda NULL väärtusi, kuid nende müükide käive sisaldub grupi kogukäibes.
+| Kanal | Kliente | Tellimusi | Käive | Keskmine tellimus | Müük kliendi kohta |
+|---|---:|---:|---:|---:|---:|
+| `google_organic` | 684 | 2 273 | 666 444,98 € | 293,20 € | 974,33 € |
+| `facebook_ads` | 351 | 1 635 | 469 933,25 € | 287,42 € | 1 338,84 € |
+| `direct` | 465 | 1 505 | 420 103,22 € | 279,14 € | 903,45 € |
+| `unknown` | 90 | 1 338 | 383 127,19 € | 286,34 € | 4 256,97 €* |
+| `email_campaign` | 275 | 1 024 | 300 296,85 € | 293,26 € | 1 091,99 € |
+| `instagram` | 259 | 877 | 262 112,79 € | 298,87 € | 1 012,02 € |
+| `google_ads` | 196 | 664 | 185 438,12 € | 279,27 € | 946,11 € |
+| `tiktok` | 127 | 463 | 127 929,88 € | 276,31 € | 1 007,32 € |
+| `google_unspecified` | 48 | 151 | 41 629,31 € | 275,69 € | 867,28 € |
+| `facebook` | 32 | 117 | 32 797,10 € | 280,32 € | 1 024,91 € |
+| `instagram_ads` | 24 | 71 | 19 365,29 € | 272,75 € | 806,89 € |
+| **Kokku** | **2 551** | **10 118** | **2 909 177,98 €** | – | – |
 
-## 9. KPI-de tõlgendus
+\* `unknown` grupi müük kliendi kohta ei ole teiste kanalitega võrreldav, sest grupis sisaldub ka NULL-kliendiga müüke.
 
-### Suurim maht
+Põhitulemused:
 
-`google_organic`:
+- `google_organic` oli suurima käibe ja tellimuste arvuga tuvastatud kanal;
+- `facebook_ads` oli tuvastatud kanalitest suurima müügiga kliendi kohta;
+- `instagram` oli suurima keskmise tellimusväärtusega kanal;
+- `google_organic`, `facebook_ads` ja `direct` moodustasid kokku 53,50% käibest ja tellimustest;
+- `unknown` moodustas 13,17% käibest ning on oluline atribuutika- ja andmekvaliteedi risk.
 
-- 684 klienti;
-- 2 273 tellimust;
-- 666 444,98 eurot käivet;
-- 22,91% kogu käibest;
-- 22,46% kõigist tellimustest.
+**Tõendusmaterjalid:**
 
-See on tugevaim kanal mahu järgi, mitte tõendatult parim ROI-kanal.
+- [Valideeritud kanalite koond](screenshots/additional_06_validated_channel_summary.png)
+- [Valideeritud kanali efektiivsus](screenshots/additional_07_validated_channel_efficiency_cte.png)
 
-### Suurim müük kliendi kohta
+## 10. Ametlik individuaalne portfoolioversioon
 
-Tuvastatud kanalitest oli suurim tulemus `facebook_ads` kanalil:
+Minu ametlik W4 individuaalne portfooliotöö on **pärast grupiesitlust valminud standardiseeritud analüüs**. Selles kasutati välja `source_clean`, kontrolliti JOIN-i kardinaalsust ning valideeriti lõpptulemus kogu `sales` tabeli referentsväärtustega.
 
-- 1 338,84 eurot kliendi kohta;
-- 4,66 tellimust kliendi kohta;
-- 469 933,25 eurot käivet.
+Ametliku portfoolioversiooni `google_organic` tulemus:
 
-### Suurim keskmine tellimus
+| Näitaja | Ametliku portfoolioversiooni väärtus |
+|---|---:|
+| Kliente | 684 |
+| Tellimusi | 2 273 |
+| Käive | 666 444,98 € |
+| Keskmine tellimus | 293,20 € |
 
-`instagram` keskmine tellimus oli 298,87 eurot. Järgnesid `email_campaign` 293,26 euroga ja `google_organic` 293,20 euroga.
+Varasemas grupiesitluse etapis kasutati enne lõpliku standardiseeritud lahenduse valmimist teistsuguseid väärtusi:
 
-### Kanalite kontsentratsioon
+| Näitaja | Varasema esitlusversiooni väärtus |
+|---|---:|
+| Kliente | 624 |
+| Tellimusi | 1 994 |
+| Käive | 582 912,57 € |
+| Keskmine tellimus | 292,33 € |
 
-`google_organic`, `facebook_ads` ja `direct` moodustasid kokku 53,50% käibest ning 53,50% tellimustest.
+Varasemaid esitlusarve käsitletakse ainult töö ajaloo osana. Need ei ole minu ametliku individuaalse portfooliotöö lõpptulemused ning neid ei segata hilisema standardiseeritud analüüsi arvudega.
 
-`unknown` moodustas veel 13,17% käibest. See on oluline atribuutika- ja andmekvaliteedi risk.
+Ametliku portfoolioversiooni valiku põhjused:
 
-## 10. Ajaline areng
+- see kasutab standardiseeritud kanalinimesid;
+- see on põhi-SQL-is reprodutseeritav;
+- tellimuste arv ja kogukäive ühtivad täielikult `sales` referentsväärtustega;
+- see kajastab minu lõplikku kontrollitud Roll D analüüsi.
+
+Varasema esitlusversiooni täpseid filtreid ja vahe-etappe ei rekonstrueerita oletuste põhjal, sest see ei ole ametliku individuaalse portfooliotöö lõpptulemus.
+
+## 11. Kuised trendid
 
 Täieliku `sales` koondi põhjal:
 
@@ -189,81 +236,112 @@ Täieliku `sales` koondi põhjal:
 | 2025 | 691 | 199 968,69 € |
 | 2026 | 16 | 4 092,37 € |
 
-2024 võrreldes 2023. aastaga:
+2024. aastal kasvas tellimuste arv **20,19%** ja käive **19,08%** võrreldes 2023. aastaga. 2024. aasta suurima käibega kuu oli detsember: **170 623,28 €**.
 
-- tellimusi lisandus 863 ehk 20,19%;
-- käive kasvas 235 599,12 eurot ehk 19,08%.
+2025. ja 2026. aasta tulemusi ei käsitleta täieliku aastatrendina, sest perioodide andmekate on ebaühtlane.
 
-Suurimad kuud:
+Kanalipõhises ajalises analüüsis ilmnes 2024. aasta lõpus tugev kõikumine. Analüüsi esitlusversioonis kasvas `google_organic` käive novembrist detsembrini 142,7%.
 
-| Kuu | Tellimusi | Käive | Keskmine tellimus |
-|---|---:|---:|---:|
-| 12.2024 | 550 | 170 623,28 € | 310,22 € |
-| 07.2024 | 510 | 146 800,80 € | 287,84 € |
-| 08.2024 | 511 | 144 870,17 € | 283,50 € |
-| 06.2024 | 509 | 144 558,18 € | 284,00 € |
-| 12.2023 | 458 | 129 104,59 € | 281,89 € |
+**Tõendusmaterjalid:**
 
-Kanalite kuised tipud:
+- [Valideeritud kuised trendid](screenshots/additional_08_validated_monthly_trends.png)
+- [Valideeritud kuised trendid CSV](screenshots/additional_08_validated_monthly_trends.csv)
+- [Kuust-kuusse käibe muutus](screenshots/additional_09_month_over_month_revenue_change.png)
+- [Kuust-kuusse käibe muutus CSV](screenshots/additional_09_month_over_month_revenue_change.csv)
+- [Müügikoondi kuine ristkontroll](screenshots/additional_10_role_a_sales_monthly_crosscheck.png)
+- [Müügikoondi kuine ristkontroll CSV](screenshots/additional_10_role_a_sales_monthly_crosscheck.csv)
 
-- `google_organic` suurim kuine käive oli 2024. aasta oktoobris: 38 158,24 €;
-- `google_organic` käive kasvas 2024. aasta detsembris 100,1%;
-- `facebook_ads` käive kasvas 2024. aasta detsembris 103,7%;
-- `instagram` käive kasvas 2024. aasta detsembris 125,9%;
-- `google_organic` suurim langus oli 2024. aasta novembris: −51,6%.
+## 12. Kuise trendipäringu piirang
 
-Tulemused viitavad tugevale hooajalisusele, eriti aasta lõpus.
-
-## 11. Kuise trendipäringu piirang
-
-Kuise päringu tingimus:
+Kanalite kuise trendi päring kasutab tingimust:
 
 ```sql
 HAVING COUNT(DISTINCT sale_id) >= 5
 ```
 
-jätab välja kanali-kuu kombinatsioonid, kus on alla viie tellimuse.
+See jätab välja väikese mahuga kanali-kuu kombinatsioonid. Kontrolli järgi jäi trenditabelist välja **166 tellimust** ja **50 121,50 € käivet**.
 
-Seetõttu sisaldab kuine kanalitabel:
+Seetõttu ei tohi kuise kanalitabeli summat kasutada kogu ettevõtte käibe referentsväärtusena.
 
-- 9 952 tellimust;
-- 2 859 056,48 eurot käivet.
+## 13. Andmeperioodide ebakõla
 
-Täielikust müügist jääb välja:
+`web_logs` viimane kuupäev on 28.02.2025, kuid `sales` sisaldab ka hilisemaid kirjeid. Pärast veebilogide lõppu toimunud müükide kanaliseos põhineb kliendi varasemal viimasel logil, mitte sama perioodi veebikäitumisel.
 
-- 166 tellimust;
-- 50 121,50 eurot käivet.
+See piirab eriti 2025. ja 2026. aasta kanalitulemuste tõlgendamist.
 
-Kuine kanalipäring sobib põhikanalite trendide vaatamiseks, kuid selle summat ei tohi kasutada ettevõtte täieliku käibe kontrollväärtusena.
+## 14. Juhtkonna koondvaade
 
-## 12. Andmeperioodi ebakõla
+Analüüsi viis peamist juhtimisnumbrit:
 
-`web_logs` viimane kuupäev on 28.02.2025. `sales` tabel sisaldab müüke ka 2025. aasta detsembris ja 2026. aasta jaanuarist juunini.
+1. `web_logs` sisaldas **50 000 rida**, millest **18,83%** olid anonüümsed.
+2. Kanali algväärtused standardiseeriti **19 väärtuselt 10 kanaliks**.
+3. Otsene kolme tabeli JOIN andis **34,53 mln €**, kuigi `sales` referentskäive oli **2,91 mln €**.
+4. `google_organic` oli suurima valideeritud müügimahuga tuvastatud kanal: **666 444,98 €** ja **2 273 tellimust**.
+5. 2024. aasta käive kasvas 2023. aastaga võrreldes **19,08%**.
 
-Pärast 2025. aasta veebruari on 32 müüki kogukäibega 8 865,94 eurot. Nende kanaliseos põhineb kliendi varasemal viimasel logil, mitte samal perioodil toimunud veebikäitumisel.
+### Tulemuste korrektne tõlgendamine
 
-Lisaks puuduvad `sales` koondis müügid 2025. aasta märtsist novembrini. Seda tuleb käsitleda võimaliku andmekatte või testandmete anomaaliana.
+Sobivad sõnastused:
 
-## 13. Soovitused
+- „suurima valideeritud käibega kanal”;
+- „suurima müügiga kliendi kohta tuvastatud kanal”;
+- „kanaliga seotud käive”;
+- „viimane teadaolev kliendikanal”;
+- „kanalite efektiivsus”.
 
-1. Siduda müük sessiooni, kampaania ID, click ID või UTM parameetritega.
-2. Lisada kampaaniakulud ja võimalusel brutomarginaal, et arvutada ROI või ROAS.
-3. Uurida `unknown` grupi 383 127,19 euro suurust käivet.
-4. Muuta `source_clean` standardiseerimisreeglid püsivaks andmetöötluse osaks.
-5. Kontrollida iga JOIN-i alati ridade arvu, unikaalsete tehingute ja kogukäibe referentsväärtustega.
-6. Hoida kuise trendi `HAVING` filter nähtava metoodilise piiranguna.
-7. Kontrollida müügi- ja veebilogide ajaperioodide kattuvust.
+Vältida tuleb järgmisi väiteid:
 
-## 14. Lõppjäreldus
+- „parim ROI”, sest kampaaniakulud puuduvad;
+- „kanal põhjustas müügi”, sest põhjuslikku seost ei ole tõendatud;
+- „konversioonimäär”, sest külastust ja tehingut ei seota sama sessiooni või kampaania alusel;
+- `unknown` käsitlemine tegeliku turunduskanalina;
+- otsese JOIN-i koondnumbrite kasutamine juhtimisinfona.
 
-Standardiseerimata `source` väärtused oleksid jaganud sama kanali mitmeks grupiks. Otsene JOIN oleks suurendanud käibe 2,91 miljonilt eurolt 34,53 miljonile eurole ning jätnud samal ajal 988 müüki välja.
+## 15. Soovitused
 
-Valideeritud tulemuste järgi on:
+### Annale ja Kristile
 
-- suurima müügimahuga kanal `google_organic`;
-- suurima müügiga kliendi kohta tuvastatud kanal `facebook_ads`;
-- suurima keskmise tellimusega kanal `instagram`;
-- suurim andmekvaliteedi risk kanalita grupp `unknown`;
-- müügimaht oli ligikaudu viiendiku võrra suurem 2024. aastal võrreldes 2023. aastaga.
+1. Toetada `google_organic` kanalit SEO, sisuturunduse ja maandumislehtede kvaliteedi kaudu.
+2. Võrrelda tasulisi kanaleid alles pärast kampaaniakulude ja võimaluse korral brutomarginaali lisamist.
+3. Uurida `unknown` grupi **383 127,19 €** suurust käivet.
+4. Hoida `source_clean` standardiseerimisreeglid püsiva andmetöötluse osana.
+5. Siduda müük tulevikus sessiooni, kampaania ID, click ID või UTM-parameetritega.
+6. Kontrollida iga JOIN-i järel ridade arvu, unikaalsete tehingute arvu ja kogukäivet.
+7. Märkida raportites alati kasutatud periood, omistamisreegel ja `HAVING`-filter.
 
-Neid tulemusi tuleb käsitleda kanalite efektiivsuse, mitte tegeliku ROI hinnanguna.
+## 16. Peamine õppetund
+
+Tehniliselt korrektne SQL ei taga sisuliselt õiget tulemust. Eri tabelite ühendamisel tuleb enne agregaatide usaldamist kontrollida:
+
+- tabelite detailsusastet;
+- JOIN-i kardinaalsust;
+- ridade arvu;
+- unikaalsete ärivõtmete arvu;
+- referentskogusummasid;
+- perioodide ja filtrite võrreldavust.
+
+See õppetund oli Nädal 4 kõige olulisem tulemus.
+
+## 17. Vabatahtlik lisaanalüüs
+
+Lisaks ametlikule Roll D tööle tegin enesearengu eesmärgil läbi ka Roll B kliendisegmentatsiooni ülesande. Selle eesmärk oli harjutada kliendigruppide moodustamist, agregatsiooniloogikat ja tulemuste kontrollimist teise äriküsimuse puhul.
+
+- [Roll B kliendisegmentatsiooni SQL](additional-analysis/week4_role_b_customer_segmentation.sql)
+- [Kliendisegmendid](additional-analysis/01_customer_segments_by_spend.png)
+- [Kliendisegmendid CSV](additional-analysis/01_customer_segments_by_spend.csv)
+- [TOP korduvkliendid](additional-analysis/02_top_repeat_customers.png)
+- [Segmentide koond ja TOP VIP-linn](additional-analysis/03_segment_summary_and_top_vip_city.png)
+
+See lisaanalüüs ei ole minu ametliku Roll D põhiartefakti osa.
+
+## 18. Ajaloolise töö säilitamine
+
+Põhi-SQL ja kuvatõmmised kajastavad Nädal 4 töö tegemise aja päringuid ja tulemusi. Korrastamisel:
+
+- SQL-i sisulist loogikat ei muudeta;
+- juhendi otsese JOIN-i tulemused säilitatakse õpiväljundi tõendina;
+- ebausaldusväärsed koondid märgistatakse failinimedes ja analüüsis;
+- dokumentatsiooni täiendatakse hilisema valideerimise ja piirangutega;
+- failinimed ja kaustad ühtlustatakse.
+
+Varem eraldi failis olnud individuaalse presentatsiooni alus ja kõnepunktid ühendati sellesse detailanalüüsi. Eraldi presentatsioonimärkuste faili portfoolios ei säilitata.
