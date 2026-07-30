@@ -1,36 +1,51 @@
-# Nädal 5: CEO müügidashboard — detailne analüüs
+# Nädal 5: Power BI dashboard’id — detailne analüüs
 
-## 1. Analüüsi eesmärk
+## 1. Töö ulatus
 
-Analüüsi eesmärk oli vastata UrbanStyle’i tegevjuhi põhiküsimusele:
+Nädala ametlik individuaalne ülesanne oli **Roll A — CEO Dashboard**, mille eesmärk oli vastata UrbanStyle’i tegevjuhi põhiküsimusele:
 
 > **Kas UrbanStyle kasvab?**
 
-Selleks koostasin Power BI Desktopis ühe ekraani juhtimisvaate, mis ühendab kolm kõrgtaseme KPI-d ja 2023.–2024. aasta kuise müügitulu võrdluse.
+Pärast ametliku töö valmimist läbitöötasin enesearendusena ka **Roll B — Marketing Dashboardi**. Täienduse eesmärk oli harjutada kuupäevamudelit, kliendihankimise mõõtmist, filtrikonteksti ja eri juhtimistasemele sobivate vaadete eristamist.
 
-## 2. Kasutatud andmed
+Grupi reposse jääb esialgne Roll A lahendus. Isiklikus portfoolios olev PBIX sisaldab uuendatud Roll A vaadet ning täiendavat Roll B analüüsi.
 
-Power BI-sse laadisin Supabase’i PostgreSQL andmebaasist tabelid:
+## 2. Kasutatud andmed ja mudel
+
+Power BI-s kasutati Supabase’i PostgreSQL andmebaasist imporditud tabeleid, sealhulgas:
 
 - `public sales`
 - `public customers`
+- `public products`
+- `public inventory`
+- `public inventory_movements`
+- `public web_logs`
 
-Tabelid seoti välja `customer_id` kaudu suhtes:
+Roll A põhianalüüs kasutab peamiselt müügi- ja klienditabelit.
+
+Põhiseos:
 
 ```text
 public customers[customer_id]  1 ─── *  public sales[customer_id]
 ```
 
-Peamised kasutatud väljad:
+Ajapõhise analüüsi jaoks lisasin eraldi `Calendar`-tabeli.
 
-| Tabel | Väli | Kasutus |
-|---|---|---|
-| `public sales` | `sale_date` | aasta ja kuu |
-| `public sales` | `total_price` | müügitulu |
-| `public sales` | `customer_id` | ostnud klientide arv |
-| `public customers` | `city` | linnapõhine filter ja kontrollanalüüs |
+Kuupäevaseosed:
 
-## 3. Mõõdikute definitsioonid
+```text
+Calendar[Date]  1 ─── *  public sales[sale_date]
+```
+
+See seos on aktiivne ja seda kasutatakse müügitulu ajaliseks filtreerimiseks.
+
+```text
+Calendar[Date]  1 - - *  public customers[Esimese ostu päev]
+```
+
+See seos on mitteaktiivne ning aktiveeritakse uute ostnud klientide mõõdikus funktsiooniga `USERELATIONSHIP`.
+
+## 3. Olulisemad DAX-mõõdikud
 
 ### Müügitulu
 
@@ -71,6 +86,16 @@ DIVIDE(
 )
 ```
 
+### Ostnud kliendid
+
+```DAX
+Ostnud kliendid =
+CALCULATE(
+    DISTINCTCOUNT('public sales'[customer_id]),
+    'public sales'[customer_id] <> BLANK()
+)
+```
+
 ### Ostnud kliendid 2024
 
 ```DAX
@@ -83,9 +108,68 @@ CALCULATE(
 )
 ```
 
-Näitajaga mõõdetakse 2024. aastal vähemalt ühe ostuga seotud unikaalseid kliente, mitte kõiki kliendibaasi registreeritud kliente.
+### Müügitulu ostnud kliendi kohta
 
-## 4. Põhitulemused
+```DAX
+Müügitulu ostnud kliendi kohta =
+DIVIDE(
+    [Müügitulu],
+    [Ostnud kliendid]
+)
+```
+
+## 4. Esimese ostu ja uute klientide loogika
+
+Kliendi esimese ostu kuupäev arvutatakse klienditabelis seotud müügitehingute põhjal.
+
+### Esimese ostu kuupäev
+
+```DAX
+Esimese ostu kuupäev =
+MINX(
+    RELATEDTABLE('public sales'),
+    'public sales'[sale_date]
+)
+```
+
+### Esimese ostu päev
+
+```DAX
+Esimese ostu päev =
+VAR EsimeneOst =
+    'public customers'[Esimese ostu kuupäev]
+RETURN
+    IF(
+        NOT ISBLANK(EsimeneOst),
+        DATE(
+            YEAR(EsimeneOst),
+            MONTH(EsimeneOst),
+            DAY(EsimeneOst)
+        )
+    )
+```
+
+### Uued ostnud kliendid
+
+```DAX
+Uued ostnud kliendid =
+CALCULATE(
+    DISTINCTCOUNT('public customers'[customer_id]),
+    USERELATIONSHIP(
+        'Calendar'[Date],
+        'public customers'[Esimese ostu päev]
+    ),
+    KEEPFILTERS(
+        'public customers'[Esimese ostu päev] <> BLANK()
+    )
+)
+```
+
+Mõõdik välistab kliendid, kellel ost puudub. Tõlgendamisel tuleb arvestada, et „uus klient” tähendab esimest ostu olemasolevas andmestikus. Kui klient ostis enne andmestiku alguskuupäeva, ei ole seda võimalik selle mudeli põhjal tuvastada.
+
+## 5. Roll A — CEO Dashboard
+
+### Põhitulemused
 
 | Näitaja | Tulemus |
 |---|---:|
@@ -95,108 +179,112 @@ Näitajaga mõõdetakse 2024. aastal vähemalt ühe ostuga seotud unikaalseid kl
 | Käibe kasv 2024 vs 2023 | 19,1% |
 | Ostnud kliendid 2024 | 2 113 |
 
-UrbanStyle’i 2024. aasta müügitulu kasvas 2023. aastaga võrreldes 235 599,12 euro võrra. Aastane kasv oli 19,1%.
+UrbanStyle’i 2024. aasta müügitulu kasvas 2023. aastaga võrreldes 235 599,12 euro võrra. Müügitulu oli 2024. aastal kõrgem kõigil kuudel.
 
-## 5. Müügitulu kuude lõikes
+### Linnade võrdlus
 
-| Kuu | Müügitulu 2023 | Müügitulu 2024 | Kasv |
-|---|---:|---:|---:|
-| Jaanuar | 79 735,03 € | 85 618,65 € | 7,4% |
-| Veebruar | 80 345,68 € | 90 181,83 € | 12,2% |
-| Märts | 91 499,55 € | 109 559,98 € | 19,7% |
-| Aprill | 99 914,07 € | 113 838,38 € | 13,9% |
-| Mai | 95 316,25 € | 116 843,02 € | 22,6% |
-| Juuni | 125 537,50 € | 144 558,18 € | 15,2% |
-| Juuli | 122 685,53 € | 146 800,80 € | 19,7% |
-| August | 120 330,64 € | 144 870,17 € | 20,4% |
-| September | 96 388,48 € | 109 267,47 € | 13,4% |
-| Oktoober | 94 805,06 € | 127 622,32 € | 34,6% |
-| November | 99 096,52 € | 110 573,94 € | 11,6% |
-| Detsember | 129 104,59 € | 170 623,28 € | 32,2% |
-| **Kokku** | **1 234 758,90 €** | **1 470 358,02 €** | **19,1%** |
+Enamik linnu kasvas. Aasta kokkuvõttes jäi ainult Valga veidi 2023. aasta tasemele alla.
 
-2024. aasta müügitulu ületas 2023. aasta taset kõigil kuudel. Suurim protsentuaalne erinevus oli oktoobris ja detsembris, kuid CEO vaate põhijäreldus põhineb kogu aasta kasvul, mitte üksikul kuul.
+Tühja linnaväärtust ei filtreeritud välja, sest sellega seotud müük moodustas olulise osa kogukäibest. Seda ei tõlgendatud automaatselt online-müügina, kuna tühja väärtuse äriline tähendus vajab eraldi andmekvaliteedi kontrolli.
 
-## 6. Linnade aastavõrdlus
+### Disainiotsused
 
-| Linn | Müügitulu 2023 | Müügitulu 2024 | Kasv |
-|---|---:|---:|---:|
-| Tallinn | 434 603,49 € | 499 652,62 € | 15,0% |
-| Tartu | 230 786,33 € | 262 593,48 € | 13,8% |
-| Pärnu | 147 997,14 € | 196 675,23 € | 32,9% |
-| Linn määramata | 118 903,92 € | 149 556,78 € | 25,8% |
-| Narva | 54 767,47 € | 60 026,30 € | 9,6% |
-| Viljandi | 41 975,32 € | 51 761,90 € | 23,3% |
-| Rakvere | 40 359,33 € | 45 512,61 € | 12,8% |
-| Jõhvi | 33 159,21 € | 39 437,19 € | 18,9% |
-| Haapsalu | 27 167,39 € | 38 735,76 € | 42,6% |
-| Kuressaare | 34 567,44 € | 36 999,11 € | 7,0% |
-| Võru | 20 271,86 € | 33 736,62 € | 66,4% |
-| Valga | 28 715,67 € | 28 140,10 € | -2,0% |
-| Paide | 21 484,33 € | 27 530,32 € | 28,1% |
+- KPI-kaardid paiknevad vaate ülaosas.
+- Peamine visuaal võrdleb 2023. ja 2024. aasta müügitulu kuude lõikes.
+- 2024. aasta on rõhutatud teal-tooniga ning 2023. aasta on neutraalne võrdlusbaas.
+- Telgede ja joonte skaalad on seadistatud nii, et trendi ei võimendataks eksitavalt.
+- Värv ei ole ainus eristusviis: aastad on tähistatud ka teksti, joone stiili või legendiga.
+- Linnaslicer võimaldab kontrollida piirkondlikke erinevusi.
 
-Enamik linnu kasvas. Aasta kokkuvõttes jäi ainult Valga 2023. aasta tasemele veidi alla.
+## 6. Roll B — Marketing Dashboard
 
-### Määramata linnaga müük
+Roll B põhivaade vastab kahele küsimusele:
 
-Tühja linnaväärtust ei filtreeritud analüüsist välja, sest selle eemaldamisel kaoks oluline osa müügitulust.
+1. milline müügikanal annab rohkem müügitulu;
+2. kuidas muutub uute ostnud klientide arv ajas.
 
-- 2024\. aasta määramata linnaga müügitulu: **149 556,78 eurot**
-- osakaal 2024. aasta kogukäibest: ligikaudu **10,2%**
-- kasv võrreldes 2023. aastaga: **25,8%**
+Põhivaates kasutatakse:
 
-Seda väärtust ei tõlgendatud automaatselt online-müügina, sest tühja linna täpne äriline tähendus vajab eraldi andmekvaliteedi kontrolli.
+- müügitulu kanalite lõikes;
+- uusi ostnud kliente kvartalite lõikes;
+- KPI-kaarte;
+- perioodi, linna ja lojaalsustaseme filtreid.
 
-## 7. Dashboard’i disainiotsused
+Eraldi detailvaates võrreldakse kvartalite lõikes ostnud klientide arvu ja müügitulu. See aitab hinnata, kas müügitulu muutus seostub eelkõige klientide arvu või ühe kliendi kohta teenitud tuluga.
 
-Dashboard’i ülesehitus järgib visuaalset hierarhiat:
+### Kanalite tõlgendamise piirang
 
-1. KPI-kaardid ülemises reas;
-2. suur joondiagramm peamise visuaalina;
-3. lühike aasta põhisõnum diagrammi all;
-4. kompaktne linnafilter paremas ülanurgas.
+`web_logs[source_clean]` ei sobi müügitulu otseseks jaotamiseks turundusallika järgi, sest veebilogide ja müügitehingute vahel puudub üheselt määratud seansi- või tehingupõhine omistamise võti. Sama kliendi müügitulu sidumine mitme allikaga põhjustaks topeltarvestuse.
 
-Olulisemad disainiotsused:
+Seetõttu kasutatakse müügitulu kanalivaates müügitabeli `channel` välja. Tegelikku turunduse efektiivsust või ROI-d ei saa hinnata ilma kampaaniakulude ja kokkulepitud omistamisloogikata.
 
-- 2024\. aasta joon kasutab UrbanStyle’i teal-värvi `#009B8D`;
-- 2023\. aasta on neutraalne hall võrdlusbaas;
-- legend asendati joonte lõpus olevate otsesiltidega;
-- eemaldati üleliigsed dekoratiivsed elemendid;
-- kogu vaade mahub ühele ekraanile;
-- värv ei ole ainus eristusviis, sest aastad on ka tekstina tähistatud.
+## 7. Kalender ja sortimine
 
-## 8. Interaktiivsus
+`Calendar`-tabel sisaldab muu hulgas:
 
-Linna slicer võimaldab valida ühe linna ning filtreerib:
+- aastat;
+- kvartalit;
+- kuud;
+- aasta-kuud;
+- aasta-kvartalit;
+- numbrilisi sortimisvälju.
 
-- 2024\. aasta müügitulu KPI-d;
+Kvartalite kronoloogilise järjestuse tagamiseks kasutatakse:
+
+```text
+Calendar[Aasta-kvartal]
+Sort by column → Calendar[Aasta-kvartal sort]
+```
+
+Kuude puhul kasutatakse:
+
+```text
+Calendar[Kuu lühike]
+Sort by column → Calendar[Kuu nr]
+```
+
+Aja telgedel kasutatakse `Calendar`-tabeli välju, mitte Power BI automaatset `sale_date` kuupäevahierarhiat.
+
+## 8. Interaktiivsus ja kontroll
+
+Dashboard’ide filtrid võimaldavad analüüsida tulemusi:
+
+- aasta ja kvartali;
+- linna;
+- lojaalsustaseme järgi.
+
+Kontrollisin mõõdikuid Power BI tabelivaadetes ja võrdlesin neid teadaolevate koondväärtustega. Eraldi kontrollisin:
+
+- 2023. ja 2024. aasta müügitulu;
 - ostnud klientide arvu;
-- käibekasvu;
-- mõlema aasta kuist trendi.
+- määramata linnaga müüki;
+- uute ostnud klientide välistamist ostuta klientidest;
+- kvartalite ja kuude sortimist;
+- filtrite mõju KPI-dele ja diagrammidele.
 
-Dashboard’i all olev **„Aasta põhisõnum”** kirjeldab kogu ettevõtte tulemust ja on staatiline tekst. See ei muutu automaatselt linnavaliku järgi.
+## 9. Õppimiskohad
 
-## 9. Kontrollid
+Täiendava Roll B läbitöötamise peamised õppimiskohad olid:
 
-Töö käigus kontrollisin:
+- ühise kuupäevatabeli loomine;
+- aktiivse ja mitteaktiivse kuupäevaseose erinevus;
+- `USERELATIONSHIP` kasutamine;
+- esimese ostu põhise kliendihankimise mõõdiku loomine;
+- ajaväljade õige sortimine;
+- filtrikonteksti mõju eri mõõdikutele;
+- juhtimisvaate ja detailvaate eristamine;
+- vigase taastamisfaili asemel viimase tervikliku PBIX-i kasutamine.
 
-- 2023\. ja 2024. aasta kogusummade vastavust kuude summale;
-- kasvuprotsendi arvutusloogikat;
-- kuude kronoloogilist järjestust;
-- 2025\. ja 2026. aasta välistamist põhivõrdlusest, sest need ei ole võrreldavad täisaastad;
-- linnasliceri mõju KPI-dele ja joondiagrammile;
-- tühja linnaväärtuse mõju kogukäibele.
+Power BI kokkujooksmise järel selgus ka varundamise praktiline tähtsus. Tööversioonid eraldati ajalooliseks esitatud versiooniks, edasiarendatud õppeversiooniks ja varukoopiaks.
 
-## 10. Piirangud
+## 10. AI kasutamine
 
-- Ligikaudu 10,2% 2024. aasta müügitulust on seotud määramata linnaga.
-- Dashboard näitab, et käive kasvas, kuid ei selgita täielikult, kas kasvu vedas klientide arvu, ostusageduse või keskmise ostukorvi muutus.
-- Ostnud klientide arv on esitatud ainult 2024. aasta kohta; kliendibaasi aastase kasvu hindamiseks tuleks võrrelda ka 2023. aasta näitajat.
-- Staatiline aasta põhisõnum ei muutu koos linnasliceriga.
-- 2025\. ja 2026. aasta osalisi perioode ei kasutatud täisaastate võrdluses.
+Kasutasin AI-d:
 
-## 11. Järeldus
+- DAX-mõõdikute koostamise ja kontrollimise toetamiseks;
+- andmemudeli ning kuupäevaseoste veaotsinguks;
+- visuaalide paigutuse ja värvikasutuse hindamiseks;
+- taastamisfailide võrdlemise ja töö taastamise kavandamiseks;
+- analüüsi ning äritõlgenduste sõnastamiseks.
 
-UrbanStyle’i 2024. aasta müügitulu kasvas 2023. aastaga võrreldes **19,1%** ning kasv oli positiivne kõigil kuudel. Linnade tulemused olid valdavalt positiivsed, kuid Valga jäi aasta kokkuvõttes veidi eelmise aasta tasemele alla.
-
-CEO vaates kinnitab dashboard ettevõtte selget kasvusuunda. Edasise analüüsi prioriteedid on määramata linnaga müügi põhjuse selgitamine ning käibekasvu allikate eristamine: klientide arv, ostusagedus ja keskmine ostukorv.
+Kõik lõplikud mõõdikud, filtrid, visuaalid ja järeldused kontrollisin Power BI-s.
