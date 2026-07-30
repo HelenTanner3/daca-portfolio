@@ -173,4 +173,3 @@ Minu individuaalne PBIX, kuvatõmmis ja lühike kirjeldus lisati meeskonna W6 re
 - [Power BI dashboard](urbanstyle_week6_tartu_dashboard_helen.pbix)
 - [Dashboard'i kuvatõmmis](screenshots/w6_role_b_tartu_kaupluse_dashboard.png)
 - [Lühike portfooliovaade](README.md)
-- [Week 6 kaust isiklikus portfoolios](https://github.com/HelenTanner3/daca-portfolio/tree/main/week-6)
