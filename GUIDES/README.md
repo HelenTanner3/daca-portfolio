@@ -16,133 +16,73 @@ GUIDES/
 │   └── git_commands_reference.md
 ├── 03_sql_supabase/
 ├── 04_powerbi/
+│   └── power_bi_working_guide.md
 ├── 05_templates/
 └── 06_markdown_documentation/
     └── markdown_working_guide.md
 ```
 
-Kaustad `03_sql_supabase`, `04_powerbi` ja `05_templates` võivad alguses sisaldada ainult tulevaste juhendite struktuuri või lisanduda hiljem.
-
 ## 01 Environment Setup
-
-Õpikeskkonna ja töövahendite seadistamise juhendid.
 
 - [PowerShelli põhikäsud ja praktiline kasutamine](01_environment_setup/powershell_basics.md)
 
-Juhend käsitleb kaustades liikumist, failide kontrollimist, käsuajaloo kasutamist, mitmerealisi käske ning levinumaid PowerShelli probleeme.
-
 ## 02 Git & GitHub
 
-GitHubi ja Giti töövoo juhendid.
-
 - [Git ja GitHub: lihtne töövoog](02_git_github/git_basic_workflow.md)  
-  Igapäevane töövoog isiklikus ja grupirepos. Grupirepo erisammud on eraldi märgitud.
+  Igapäevane töövoog isiklikus ja grupirepos.
 
 - [Git käskude referents](02_git_github/git_commands_reference.md)  
-  Käskude koond staatuse kontrollimiseks, muudatuste lisamiseks, harude haldamiseks ja vigade parandamiseks.
+  Harvem kasutatavad käsud, harude haldamine ja vigade parandamine.
 
 ## 03 SQL & Supabase
 
-SQL-i ja Supabase’i kasutamise juhendid.
+Siia koondan SQL-i ja Supabase’i juhendid.
 
 Planeeritud teemad:
 
 - SQL põhikäsud;
-- `SELECT`, `WHERE`, `ORDER BY` ja `LIMIT`;
-- `COUNT` ja `COUNT DISTINCT`;
-- `NULL` väärtuste kontroll;
-- duplikaatide otsimine;
+- andmete puhastamine;
+- JOIN-id;
+- agregatsioon;
 - andmekvaliteedi kontrollid;
-- Supabase’i tabelite kasutamine.
+- Supabase’i ühendus ja töövoog.
 
 ## 04 Power BI
 
-Power BI märkmed ja juhendid.
+- [Power BI praktiline tööjuhend](04_powerbi/power_bi_working_guide.md)
 
-Planeeritud teemad:
-
-- andmete import;
-- andmemudeli põhimõtted;
-- visuaalide valik;
-- DAX mõõdikud;
-- filtrid ja interaktsioonid;
-- raporti esitluskõlblik vormistamine;
-- värvipimedatele sobiv kujundus;
-- dashboard’i dokumenteerimine.
+Juhend põhineb DACA Nädal 5–6 koolitusel ning UrbanStyle’i CEO ja Tartu kaupluse dashboard’ide tegemisel. See hõlmab andmeühendust, mudelit, Calendar-tabelit, DAX-i, visuaale, filtreid, interaktsioone, annotatsioone, andmelugu, valideerimist, avaldamist ja tõrkeotsingut.
 
 ## 05 Templates
 
-Korduvkasutatavad mallid.
+Siia koondan korduvkasutatavad mallid.
 
 Planeeritud mallid:
 
 - nädala lühikese README mall;
-- eraldi `analysis.md` mall;
+- `analysis.md` mall;
 - esitluse kokkuvõtte mall;
 - NotebookLM RAG faili mall;
 - GitHubi commit’i kontrollnimekiri.
 
 ## 06 Markdown & Documentation
 
-Markdowni ja GitHubi dokumentatsiooni juhendid.
-
 - [Markdowni praktiline tööjuhend](06_markdown_documentation/markdown_working_guide.md)
-
-Juhend käsitleb pealkirju, loendeid, linke, pilte, tabeleid, koodiplokke, suhtelisi failiteid, README ja analüüsi eristamist ning levinumate vormistusvigade lahendamist.
 
 ## Soovitatav kasutamise järjekord
 
-1. Alusta [PowerShelli põhijuhendist](01_environment_setup/powershell_basics.md), kui terminali kasutamine ei ole veel kindel.
-2. Kasuta igapäevases töös [Giti lihtsat töövoogu](02_git_github/git_basic_workflow.md).
-3. Ava [Git käskude referents](02_git_github/git_commands_reference.md), kui vajad harvem kasutatavat käsku.
-4. Kontrolli dokumentatsiooni vormistamist [Markdowni juhendist](06_markdown_documentation/markdown_working_guide.md).
+1. [PowerShelli põhijuhend](01_environment_setup/powershell_basics.md)
+2. [Giti lihtne töövoog](02_git_github/git_basic_workflow.md)
+3. [Git käskude referents](02_git_github/git_commands_reference.md)
+4. [Power BI praktiline tööjuhend](04_powerbi/power_bi_working_guide.md)
+5. [Markdowni tööjuhend](06_markdown_documentation/markdown_working_guide.md)
 
 ## Kasutamise põhimõtted
 
-1. Hoian siin ainult korrastatud ja taaskasutatavaid juhendeid.
-2. Isiklikud mustandid ja pooleliolevad märkmed jäävad Notioni või lokaalsesse märkmesse.
-3. Avalikku reposse ei lisa paroole, API võtmeid, privaatseid linke ega tundlikku infot.
-4. Iga juhend peab olema piisavalt selge, et seda saaks hiljem kasutada ilma varasema vestluse abita.
-5. Juhend peab eristama tavapärast töövoogu, grupirepo erisamme ja riskantsemaid paranduskäske.
-6. README jääb lühikeseks; põhjalikum analüüs paigutatakse eraldi `analysis.md` faili.
-7. Dokumentatsioon peab kirjeldama tegelikult tehtud tööd ja kontrollitud tulemusi.
+1. Hoian siin korrastatud ja taaskasutatavaid juhendeid.
+2. Avalikku reposse ei lisa paroole, API võtmeid, privaatseid linke ega tundlikku infot.
+3. Juhend peab olema kasutatav ilma varasema vestluse konteksti taastamata.
+4. README jääb lühikeseks; põhjalikum analüüs paigutatakse eraldi `analysis.md` faili.
+5. Dokumentatsioon kirjeldab tegelikult tehtud tööd ja kontrollitud tulemusi.
+6. Kontrollimata Power BI LIVE URL-i või funktsiooni ei esitata valmis lahendusena.
 
-## Minu tavapärane GitHubi töövoog
-
-### Isiklik repo
-
-```powershell
-git status
-git pull --ff-only
-git status --short
-git add -- ".\vajalik-kaust"
-git commit -m "Kirjeldav commit message"
-git push
-git status
-```
-
-### Grupirepo
-
-Grupirepos kasutatakse eraldi tööharu ja pull request’i.
-
-```powershell
-git switch main
-git pull --ff-only
-git switch -c uus-tööharu
-git add -- ".\enda-töö-kaust"
-git commit -m "Kirjeldav commit message"
-git push -u origin uus-tööharu
-```
-
-Pärast pull request’i ühendamist:
-
-```powershell
-git switch main
-git pull --ff-only
-git branch -d uus-tööharu
-git fetch --prune
-```
-
-## Märkus
-
-Juhendite kaust asub minu isiklikus portfooliorepos. Grupireposse `DACA-group` ma isiklikke üldjuhendeid ei lisa.
