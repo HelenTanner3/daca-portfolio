@@ -2,9 +2,9 @@
 
 ## 1. Töö kontekst ja roll
 
-Nädal 6 jätkas Nädal 5 Power BI dashboard'i prototüübi arendamist. Grupitöö eesmärk oli muuta üldine visuaal asukohapõhiseks juhtimisvaateks, lisades konteksti, annotatsioonid, viitejooned ja andmeloo.
+Nädal 6 jätkas Nädal 5 Power BI dashboard'i prototüübi arendamist. Grupitöö eesmärk oli muuta üldine visuaal asukohapõhiseks juhtimisvaateks, lisades konteksti, annotatsioonid, viitejooned, interaktiivsuse ja andmeloo.
 
-Minu ametlik roll oli **Roll B — Tartu kaupluse dashboard ja narratiiv**. Individuaalne artefakt on Tartu kaupluse juhtimisvaade Power BI-s. Meeskonna reposse lisatud PBIX, kuvatõmmis ja lühike README olid grupitöö sisendid; käesolev `analysis.md` kirjeldab ainult minu individuaalset tööd ja selle tulemusi.
+Minu ametlik roll oli **Roll B — Tartu kaupluse dashboard ja narratiiv**. Individuaalne artefakt on Tartu kaupluse juhtimisvaade Power BI-s. Meeskonna reposse lisatud PBIX, kuvatõmmis ja dokumentatsioon olid grupitöö sisendid; käesolev `analysis.md` kirjeldab minu individuaalset lahendust, tulemusi ja arendusotsuseid.
 
 ## 2. Äriküsimus
 
@@ -12,7 +12,7 @@ Dashboard vastab kolmele põhiküsimusele:
 
 1. Kuidas muutus Tartu kaupluse 2024. aasta müügitulu võrreldes 2023. aastaga?
 2. Kas muutus tulenes eelkõige tellimuste arvust või keskmise tellimuse väärtusest?
-3. Millised kuud ja tooted vajavad juhtimisotsuse seisukohalt tähelepanu?
+3. Millised kuud, tooted ja segmendid vajavad juhtimisotsuse seisukohalt tähelepanu?
 
 Juhendi rollikirjelduses kasutatud Tartu langustrend oli näitlik lähtekoht. Tegelik andmestik näitas 2024. aastal kasvu, mistõttu koostasin narratiivi kontrollitud tulemuste, mitte juhendi näite põhjal.
 
@@ -22,9 +22,10 @@ Dashboard kasutab järgmisi Power BI mudeli osi:
 
 - `public sales` — müügitulu, tellimused, kuupäev, kauplus ja toode;
 - `Calendar` — aasta, kuu ja kuude korrektne järjestus;
-- `public products` — tootenimed TOP 5 toodete võrdluseks.
+- `public products` — tootenimi, kategooria ja alamkategooria;
+- `public customers` — kliendigrupp (`loyalty_tier`) detailfiltriks.
 
-PBIX-mudelis on lisaks klientide ja inventuuri tabelid, kuid selle lehe kuvatud analüüs keskendub müügi-, aja- ja tooteandmetele.
+PBIX-mudelis on lisaks inventuuri tabelid, kuid selle lehe analüüs keskendub müügi-, aja-, toote- ja kliendisegmendi andmetele.
 
 Võrdlusperiood on **2023 vs 2024**, sest need on dashboard'is kasutatud täielikud võrreldavad aastad. Hilisemate aastate andmeid selles narratiivis ei kasutatud.
 
@@ -38,8 +39,12 @@ Dashboard sisaldab:
 - kuist müügitulu võrdlevat joondiagrammi;
 - kuist aastakasvu diagrammi;
 - TOP 5 toodete 2024 müügitulu tulpdiagrammi;
+- toote–alamkategooria–kategooria hierarhiat TOP 5 diagrammil;
 - kaupluse valiku slicer'it, mille vaikeseis on Tartu;
+- kategooria, alamkategooria ja kliendigrupi detailfiltreid lehe alaosas;
 - kahte annotatsiooni ja juhtimisnarratiivi.
+
+TOP 5 diagrammi hierarhia ei reasta eraldi TOP 5 kategooriat või alamkategooriat. Selle eesmärk on näidata, millistesse alamkategooriatesse ja kategooriatesse valitud TOP 5 tooted kuuluvad.
 
 Värvikasutus on järjepidev: 2024 on tähistatud tumeda navy-tooniga, 2023 teal-tooniga, positiivne tähelepanek rohelise ja negatiivne oranži tooniga. Joondiagrammidel kasutatakse lisaks markerite kuju, et seeriad ei eristuks ainult värvi põhjal.
 
@@ -53,7 +58,7 @@ Peamised mõõdikud põhinevad järgmisel loogikal:
 - **aastane muutus** — 2024 ja 2023 müügitulu vahe jagatud 2023 müügituluga;
 - **kuine muutus** — iga 2024. aasta kuu võrdlus 2023. aasta sama kuuga.
 
-Kõik KPI-d reageerivad Power BI filtrikontekstile. Tartu tulemused on dashboard'i vaikeseis ja analüüsi ametlik alus.
+Tartu tulemused on dashboard'i vaikeseis ja analüüsi ametlik alus. Täiendavad slicer'id võimaldavad vaadata sobivaid visuaale kategooria, alamkategooria ja kliendigrupi filtrikontekstis.
 
 ## 6. Kontrollväärtused
 
@@ -89,7 +94,9 @@ Kuude summad ühtivad KPI-kaartidel kuvatud aastasummadega.
 
 ### 6.3. TOP 5 tooted
 
-TOP 5 toodete 2024 müügitulu jääb ligikaudu 3,2–3,7 tuhande euro vahele. Väärtused on omavahel suhteliselt lähedased, mistõttu ei näita dashboard ühe selgelt domineeriva toote kontsentratsiooniriski. Täielikud tootenimed on PBIX-failis nähtavad visuaali ja tooltip'ide kaudu; kuvatõmmisel on pikemad nimetused ruumipiirangu tõttu kärbitud.
+TOP 5 toodete 2024 müügitulu jääb ligikaudu 3,2–3,7 tuhande euro vahele. Väärtused on omavahel suhteliselt lähedased, mistõttu ei näita dashboard ühe selgelt domineeriva toote kontsentratsiooniriski.
+
+Diagrammile lisatud hierarhia võimaldab liikuda toodete tasemelt alamkategooria ja kategooria tasemele. See aitab mõista, millisesse sortimendistruktuuri TOP 5 tooted kuuluvad, kuid ei asenda eraldi kategooriate müügiedetabelit.
 
 ## 7. Tulemuste tõlgendus
 
@@ -107,7 +114,7 @@ Dashboard ei sisalda kampaania-, konkurendi-, tööjõu- ega kauplusekülastuse 
 
 ### 7.3. Tootemüük on TOP 5 sees jaotunud
 
-TOP 5 toodete müügitulud on suhteliselt lähedased. See vähendab riski, et Tartu tulemus sõltub ainult ühest bestsellerist, kuid täpsema sortimendiotsuse jaoks on vaja võrrelda müüdud koguseid, marginaali, laoseisu ja tootekategooriaid.
+TOP 5 toodete müügitulud on suhteliselt lähedased. See vähendab riski, et Tartu tulemus sõltub ainult ühest bestsellerist, kuid täpsema sortimendiotsuse jaoks on vaja võrrelda müüdud koguseid, marginaali, laoseisu ning kategooriate kogutulemusi.
 
 ## 8. Andmelugu ja juhtimissoovitus
 
@@ -119,18 +126,22 @@ Dashboard'i narratiiv on:
 
 Soovitus ei eelda, et mai kasvu põhjus on juba teada. Esmalt tuleb võrrelda kahe kuu:
 
-- toodete ja kategooriate osakaalu;
+- toodete, alamkategooriate ja kategooriate osakaalu;
 - tellimuste arvu ja keskmist tellimust;
-- kliendisegmente ning korduvostjaid;
+- kliendigruppe ning korduvostjaid;
 - kampaaniaid ja võimalikke operatiivseid muutusi, kui need andmed on kättesaadavad.
 
-## 9. Interaktiivsus
+## 9. Interaktiivsus ja kujundusotsused
 
-Dashboard sisaldab `Kauplus` slicer'it ja Tartu on salvestatud vaikevalikuna. Visuaalid on loodud filtrikontekstile reageerima, et sama lehe struktuuri saaks kasutada ka teiste füüsiliste kaupluste kontrollimiseks.
+Kaupluse valik on paigutatud dashboard'i ülaossa, sest see määrab kogu juhtimisvaate põhikonteksti. Tartu on salvestatud vaikevalikuna.
 
-Narratiiv ja aprilli/mai annotatsioonid on siiski staatilised ning kirjeldavad ainult Tartut. See piirang on märgitud ka dashboard'il. Teise kaupluse valimisel tuleb tõlgendada dünaamilisi KPI-sid ja diagramme, mitte Tartu kohta kirjutatud staatilist teksti.
+Kategooria, alamkategooria ja kliendigrupi filtrid on paigutatud lehe alaossa. Valiku eesmärk oli hoida esmane juhtimisvaade rahulikuna: üleval on peamine kauplusefilter ning detailsemad analüüsivõimalused on eraldatud kasutajale, kes soovib andmetesse sügavamalt minna.
 
-Dokumentatsiooni koostamise ajal ei tehtud eraldi täielikku `Edit interactions` maatriksi kordustesti. Seetõttu tuleb enne võimalikku avalikku jagamist kontrollida, et kaupluse slicer filtreerib kõiki KPI-sid ja diagramme soovitud viisil.
+TOP 5 toodete diagrammil on toote, alamkategooria ja kategooria tasemed. Kasutaja saab drillimise abil vaadata TOP 5 toodete kuuluvust sortimendihierarhias.
+
+Narratiiv ja aprilli/mai annotatsioonid on staatilised ning kirjeldavad ainult Tartut. Teise kaupluse või detailfiltri valimisel tuleb tõlgendada dünaamilisi KPI-sid ja diagramme, mitte Tartu kohta kirjutatud staatilist teksti.
+
+Enne avalikku jagamist tuleb kontrollida `Edit interactions` vaates, et kaupluse-, kategooria-, alamkategooria- ja kliendigrupi filtrid mõjutavad ainult soovitud KPI-sid ja diagramme.
 
 ## 10. Valideerimine ja kvaliteedikontroll
 
@@ -141,34 +152,55 @@ Tehtud kontrollid:
 - tellimuste ja keskmise tellimuse väärtused lepivad kokku müügituluga;
 - kuine narratiiv vastab visualiseeritud andmetele;
 - juhendis toodud näitlikku −5% langust ei kasutatud tegeliku tulemusena;
-- võimalikke ärilisi põhjuseid ei esitatud kinnitatud faktidena ilma täiendavate andmeteta.
+- võimalikke ärilisi põhjuseid ei esitatud kinnitatud faktidena ilma täiendavate andmeteta;
+- uuendatud PBIX sisaldab TOP 5 toodete hierarhiat ning kategooria, alamkategooria ja kliendigrupi slicer'eid.
 
-## 11. Piirangud ja edasised arendused
+## 11. Juhendaja tagasiside ja refleksioon
 
-- Kauplusefilter muudab visuaale, kuid staatiline narratiiv ei muutu valikuga kaasa.
-- Interaktsioonid tuleb enne avaldamist kõikide visuaalide lõikes uuesti testida.
+Juhendaja tõi välja kaks võimalikku kujundusparandust:
+
+1. Detailfiltrid võiksid olla dashboard'i ülaosas ning avaneda kokkupandava ehk akordioni-tüüpi filtriplokina.
+2. Aastate võrdluses võiks uuem aasta olla visuaalselt heledam ning võrdlusaasta hallikam ja vähem domineeriv.
+
+Neid muudatusi sellesse lõppversiooni ei viidud. Praegune paigutus jätab ülaossa ainult peamise kauplusevaliku ning koondab detailfiltrid lehe alaossa, et esimene vaade ei muutuks liiga tihedaks. Värvilahendus säilitati varasema dashboard'i järjepidevuse tõttu.
+
+Tagasiside on siiski sisuline arenduspunkt. Edaspidi uurin Power BI-s kokkupandava filtriploki lahendusi ning võrdlusaasta teadlikumat visuaalset taandamist.
+
+## 12. Piirangud ja edasised arendused
+
+- Kaupluse- ja detailfiltrid muudavad visuaale, kuid staatiline narratiiv ei muutu valikuga kaasa.
+- Interaktsioonid tuleb kõikide slicer'ite ja visuaalide lõikes uuesti testida.
+- TOP 5 hierarhia kirjeldab valitud toodete kategooriakuuluvust, mitte kategooriate TOP 5 järjestust.
 - Dashboard ei sisalda marginaali, kampaaniate, konkurentide, külastuste ega tööjõuandmeid.
 - TOP 5 toodete võrdlus põhineb müügitulul, mitte kasumlikkusel või laoseisul.
 - Analüüs võrdleb 2023. ja 2024. aasta tulemusi ega tee prognoosi.
 - Avalikku Power BI Service'i linki ega mobiilivaadet ei ole selle portfoolioversiooni tõendusmaterjalina kontrollitud.
 
-Edasine arendus võiks muuta narratiivi dünaamiliseks, lisada tootekategooria ja kliendisegmendi drill-down'i ning siduda müügitulemuse varu- ja marginaaliandmetega.
+Edasised arendused võiksid hõlmata:
 
-## 12. Individuaalse ja grupitöö eristus
+- kokkupandavat filtriplokki, mis jätab detailfiltrid kättesaadavaks, kuid säästab ekraaniruumi;
+- uuema ja võrdlusaasta visuaalse hierarhia täpsustamist;
+- dünaamilist narratiivi, mis muutub koos filtritega;
+- kategooriate eraldi müügiedetabelit;
+- müügitulemuse sidumist varu- ja marginaaliandmetega.
+
+## 13. Individuaalse ja grupitöö eristus
 
 ### Individuaalne töö
 
 - Tartu kaupluse Power BI dashboard;
 - Tartu andmetel põhinevad KPI-d, trendid, TOP 5 tooted ja narratiiv;
+- TOP 5 toodete drill-hierarhia;
+- kategooria, alamkategooria ja kliendigrupi detailfiltrid;
 - käesolev detailanalüüs ja kuvatõmmis.
 
 ### Grupitöö
 
-Minu individuaalne PBIX, kuvatõmmis ja lühike kirjeldus lisati meeskonna W6 reposse ning ühendati `main` harusse PR-iga **“Add week 6 Helen role B dashboard”**. Grupi repo commit on `6a1e5c6`. Grupi repo materjal on eraldi meeskonnatöö väljund ega asenda isikliku portfoolio dokumentatsiooni.
+Minu individuaalne PBIX, kuvatõmmis ja dokumentatsioon lisati meeskonna W6 reposse. Grupi repo materjal on eraldi meeskonnatöö väljund ega asenda isikliku portfoolio dokumentatsiooni.
 
 - [Minu W6 väljund grupirepos](https://github.com/Kolju3/DACA-group/tree/main/week-6/individual/helen)
 
-## 13. Artefaktid
+## 14. Artefaktid
 
 - [Power BI dashboard](urbanstyle_week6_tartu_dashboard_helen.pbix)
 - [Dashboard'i kuvatõmmis](screenshots/w6_role_b_tartu_kaupluse_dashboard.png)

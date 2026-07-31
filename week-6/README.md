@@ -17,6 +17,12 @@ Minu ametlik roll grupitöös oli **Roll B — Tartu kaupluse dashboard ja narra
 - Müügitulu kasvas üheksal kuul kaheteistkümnest. Suurim langus oli aprillis (**−30,9%**) ja tugevaim kasv mais (**+96,9%**).
 - TOP 5 toodete 2024. aasta müügitulud jäid ligikaudu **3,2–3,7 tuhande euro** vahele, mistõttu ei domineerinud üks toode ülejäänute ees selgelt.
 
+## Interaktiivne lahendus
+
+- Kaupluse valik on paigutatud dashboard'i ülaossa kui peamine juhtimisfilter.
+- TOP 5 toodete diagrammil saab liikuda toote, alamkategooria ja kategooria tasemete vahel, et näha valitud toodete kuuluvust.
+- Detailsemaks analüüsiks on lehe alaosas filtrid kategooria, alamkategooria ja kliendigrupi järgi.
+
 ## Järeldus
 
 Tartu aastakasvu peamine allikas oli suurem tellimuste arv, mitte keskmise ostukorvi kasv. Edasises analüüsis tuleks võrrelda aprilli languse ja mai kasvu toote-, kategooria- ning kliendisegmendi struktuuri, et eristada ajutist kõikumist korratavatest kasvuteguritest.
@@ -26,13 +32,13 @@ Tartu aastakasvu peamine allikas oli suurem tellimuste arv, mitte keskmise ostuk
 - Power BI Desktop ja DAX-mõõdikud
 - kuupõhine 2023–2024 võrdlus
 - KPI-kaardid, joone- ja tulpdiagrammid
-- kauplusefilter, annotatsioonid ja viitejooned
-- andmeloo ning juhtimissoovituse koostamine
-- värvipimedatele sobiv ja järjepidev värvikasutus
+- slicer'id, filtrikontekst ja visuaalihierarhia
+- drill-up/drill-down toodete, alamkategooriate ja kategooriate vahel
+- annotatsioonid, viitejooned ja juhtimisnarratiiv
 
 ## AI kasutamine
 
-AI-d kasutasin õppematerjalide ja nõuete mõtestamisel, DAX-mõõdikute ning Power BI seadistuste kontrollimisel, dashboard'i kujundusotsuste läbivaatamisel ja dokumentatsiooni vormistamisel. Lõplikud arvud ja järeldused kontrollisin PBIX-faili ning kuvatõmmise põhjal.
+AI-d kasutasin õppematerjalide ja nõuete mõtestamisel, DAX-mõõdikute ning Power BI seadistuste kontrollimisel, dashboard'i kujundusotsuste läbivaatamisel ja dokumentatsiooni vormistamisel. Lõplikud arvud ja järeldused kontrollisin PBIX-faili põhjal.
 
 ## Artefaktid
 
