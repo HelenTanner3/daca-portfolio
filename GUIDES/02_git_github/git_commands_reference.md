@@ -1,42 +1,32 @@
-# Git Commands Reference
+# Git käskude referents
 
-See juhend koondab põhilised Git käsud, mida kasutan andmeanalüüsi õpingute ja GitHubi portfoolio haldamisel.
+See fail on käsureferents. Igapäevase samm-sammulise töövoo jaoks kasuta faili [git_basic_workflow.md](git_basic_workflow.md).
 
-Märkus: juhendi esialgne struktuur põhineb õpingukaaslase koostatud Git käskude koondil. Sisu on kohandatud minu enda töövoo, Windowsi PowerShelli ja `daca-portfolio` repo jaoks.
+Käsud on kohandatud Windows PowerShelli, VS Code’i, isikliku `daca-portfolio` repo ja grupi `DACA-group` repo jaoks.
 
----
+## 1. Repo ja ühenduse kontroll
 
-## Table of Contents
+| Käsk | Selgitus |
+|---|---|
+| `git status` | Näitab töökausta, stagingu ja haru seisu. |
+| `git status --short` | Näitab muudatusi lühivormis. |
+| `git status -sb` | Näitab haru ning kohaliku ja remote’i võrdlust. |
+| `git remote -v` | Näitab, millise GitHubi repoga kohalik repo seotud on. |
+| `git branch --show-current` | Näitab aktiivset haru. |
+| `git branch -vv` | Näitab kohalikke harusid ja nende remote-seoseid. |
+| `git fetch origin` | Uuendab infot GitHubi harude ja commit’ide kohta, kuid ei muuda tööfaile. |
+| `git fetch --prune origin` | Uuendab remote-infot ja eemaldab aegunud remote-harude viited. |
 
-1. [Repository Setup](#repository-setup)
-2. [Basic Workflow](#basic-workflow)
-3. [Remote Repositories](#remote-repositories)
-4. [Viewing History and Status](#viewing-history-and-status)
-5. [Undoing Changes](#undoing-changes)
-6. [Branching](#branching)
-7. [Troubleshooting](#troubleshooting)
-8. [Quick Cheat Sheet](#quick-cheat-sheet)
+Isikliku repo remote:
 
----
+```text
+https://github.com/HelenTanner3/daca-portfolio.git
+```
 
-# Repository Setup
+Grupirepo remote:
 
-Käsud repo loomiseks, kloonimiseks ja ühenduse kontrollimiseks.
-
-| Command                                            | Explanation                                                 |
-| -------------------------------------------------- | ----------------------------------------------------------- |
-| `git init`                                         | Loob praegusesse kausta uue Git repo.                       |
-| `git clone <url>`                                  | Laeb GitHubi repo arvutisse.                                |
-| `git remote -v`                                    | Näitab, millise GitHubi aadressiga lokaalne repo seotud on. |
-| `git remote set-url origin <url>`                  | Muudab olemasoleva remote aadressi õigeks.                  |
-| `git config --global user.name "Your Name"`        | Määrab Git kasutajanime.                                    |
-| `git config --global user.email "you@example.com"` | Määrab Git e-posti aadressi.                                |
-| `git config --list`                                | Näitab Git seadistusi.                                      |
-
-Minu isikliku repo õige remote:
-
-```powershell
-git remote set-url origin https://github.com/HelenTanner3/daca-portfolio.git
+```text
+https://github.com/Kolju3/DACA-group.git
 ```
 
 Kontroll:
@@ -45,247 +35,259 @@ Kontroll:
 git remote -v
 ```
 
-Oodatav tulemus:
+## 2. GitHubi muudatuste allatoomine
+
+| Käsk | Selgitus |
+|---|---|
+| `git pull --ff-only` | Toob muudatused alla ainult siis, kui haru saab turvaliselt edasi nihutada. |
+| `git fetch origin` | Uuendab remote-infot ilma tööfaile muutmata. |
+| `git diff --name-status HEAD..origin/main` | Näitab GitHubi `main` harus olevaid failimuudatusi, mida kohalikus `HEAD`-is veel ei ole. |
+| `git ls-tree -r --name-only origin/main` | Näitab GitHubi `main` haru failide nimekirja. |
+
+Kui muutsid faili otse GitHubis:
+
+```powershell
+git status
+git pull --ff-only
+```
+
+## 3. Muudatuste vaatamine
+
+| Käsk | Selgitus |
+|---|---|
+| `git diff` | Näitab stagingusse lisamata muudatusi. |
+| `git diff -- ".\fail.md"` | Näitab ühe faili stagingusse lisamata muudatusi. |
+| `git diff --cached` | Näitab stagingusse lisatud muudatusi. |
+| `git diff --cached --stat` | Näitab stagingu failide ja muudatuste mahu kokkuvõtet. |
+| `git diff --cached --name-status` | Näitab stagingus olevate failide nimed ja muutuse liigi. |
+| `git diff --check` | Kontrollib muu hulgas üleliigseid tühikuid ja mõningaid vormistusprobleeme. |
+| `git log -3 --oneline` | Näitab kolme viimast commit’i. |
+| `git log --oneline --all --graph --decorate -10` | Näitab harude ja commit’ide seoseid graafilises lühivaates. |
+
+Diff-vaatest väljumiseks vajuta:
 
 ```text
-origin  https://github.com/HelenTanner3/daca-portfolio.git (fetch)
-origin  https://github.com/HelenTanner3/daca-portfolio.git (push)
+q
 ```
 
----
+## 4. Failide lisamine stagingusse
 
-# Basic Workflow
+| Käsk | Selgitus |
+|---|---|
+| `git add -- ".\fail.md"` | Lisab ühe faili stagingusse. |
+| `git add -- ".\kaust"` | Lisab ühe kausta muudatused stagingusse. |
+| `git add -A -- ".\kaust"` | Lisab kaustas uued, muudetud, eemaldatud ja ümber nimetatud failid. |
+| `git add .` | Lisab kogu repo kõik muudatused. Kasuta ainult siis, kui oled `git status --short` tulemuse üle kontrollinud. |
 
-Igapäevane Git töövoog.
+Soovitus: eelista konkreetse faili või kausta lisamist.
 
-| Command                         | Explanation                                                          |
-| ------------------------------- | -------------------------------------------------------------------- |
-| `git status`                    | Näitab, mis seisus töökaust on.                                      |
-| `git add <file>`                | Lisab konkreetse faili commit’i jaoks valmis.                        |
-| `git add .`                     | Lisab kõik muudatused commit’i jaoks valmis.                         |
-| `git commit -m "message"`       | Loob commit’i koos lühikese kirjeldusega.                            |
-| `git push`                      | Saadab commit’id GitHubi.                                            |
-| `git pull --rebase origin main` | Toob GitHubi muudatused alla ja paigutab sinu commit’id nende peale. |
+## 5. Commit ja push
 
-Minu tavaline töövoog:
+| Käsk | Selgitus |
+|---|---|
+| `git commit -m "Message"` | Loob stagingus olevatest muudatustest commit’i. |
+| `git push` | Saadab kohaliku haru commit’id selle seotud remote-harusse. |
+| `git push -u origin <haru>` | Saadab uue tööharu GitHubi ja loob jälgimisseose. |
+| `git push origin --delete <haru>` | Kustutab remote-haru GitHubist. |
+
+Hea commit’i sõnum kirjeldab, mida muudeti:
 
 ```powershell
-git status
-git pull --rebase origin main
-git add .
-git commit -m "Kirjeldav commit message"
-git pull --rebase origin main
-git push
-git status
+git commit -m "Update week 6 dashboard interactivity"
 ```
 
----
+Väldi liiga üldisi sõnumeid:
 
-# Remote Repositories
-
-Käsud GitHubi ühenduse haldamiseks.
-
-| Command                         | Explanation                                                         |
-| ------------------------------- | ------------------------------------------------------------------- |
-| `git remote -v`                 | Näitab remote repo aadressi.                                        |
-| `git pull`                      | Toob GitHubi muudatused alla ja teeb merge’i.                       |
-| `git pull --rebase origin main` | Toob GitHubi muudatused alla rebase töövooga.                       |
-| `git push`                      | Saadab kohalikud commit’id GitHubi.                                 |
-| `git push -u origin main`       | Seob kohaliku branch’i GitHubi branch’iga ja saadab commit’id üles. |
-
-Kui `git push` annab vea `fetch first`, siis kasutan:
-
-```powershell
-git pull --rebase origin main
-git push
+```text
+update
+changes
+test
 ```
 
----
+## 6. Harude haldamine
 
-# Viewing History and Status
+| Käsk | Selgitus |
+|---|---|
+| `git branch` | Näitab kohalikke harusid. |
+| `git branch -a` | Näitab kohalikke ja remote-harusid. |
+| `git branch --merged main` | Näitab kohalikke harusid, mis on `main` harusse ühendatud. |
+| `git branch --no-merged main` | Näitab kohalikke harusid, mis ei ole `main` harusse ühendatud. |
+| `git switch main` | Liigub `main` harusse. |
+| `git switch -c <haru>` | Loob uue haru ja liigub sinna. |
+| `git branch -d <haru>` | Kustutab ühendatud kohaliku haru. |
+| `git branch -D <haru>` | Sunnib kohaliku haru kustutamise. Kasuta ainult siis, kui oled kindel, et ühendamata töö ei ole vajalik. |
 
-Käsud ajaloo ja muudatuste vaatamiseks.
-
-| Command                           | Explanation                                        |
-| --------------------------------- | -------------------------------------------------- |
-| `git status`                      | Kõige olulisem kontrollkäsk. Näitab hetkeolukorda. |
-| `git log --oneline`               | Näitab commit ajalugu lühidalt.                    |
-| `git log --oneline --max-count=5` | Näitab viimased 5 commit’i.                        |
-| `git diff`                        | Näitab muudatusi, mida ei ole veel staged.         |
-| `git diff --staged`               | Näitab muudatusi, mis on juba staged.              |
-
-Näide:
-
-```powershell
-git log --oneline --max-count=5
-```
-
----
-
-# Undoing Changes
-
-Käsud vigade parandamiseks.
-
-| Command                       | Explanation                                                                          |
-| ----------------------------- | ------------------------------------------------------------------------------------ |
-| `git restore <file>`          | Võtab failist tagasi salvestamata muudatused. Ettevaatlik: muudatused kaovad.        |
-| `git restore --staged <file>` | Eemaldab faili staging alast, aga jätab muudatused alles.                            |
-| `git reset --soft HEAD~1`     | Võtab viimase commit’i tagasi, aga jätab muudatused alles staged kujul.              |
-| `git revert <commit-hash>`    | Loob uue commit’i, mis tühistab varasema commit’i muudatused. Sobib jagatud ajaloos. |
-
-Kui lisasin kogemata faili staging alasse:
-
-```powershell
-git restore --staged <file>
-```
-
-Kui tahan vaadata seisu:
-
-```powershell
-git status
-```
-
----
-
-# Branching
-
-Branch’e kasutan siis, kui tahan teha suuremaid muudatusi ilma `main` haru kohe mõjutamata.
-
-| Command                       | Explanation                            |
-| ----------------------------- | -------------------------------------- |
-| `git branch`                  | Näitab olemasolevaid branch’e.         |
-| `git switch -c <branch-name>` | Loob uue branch’i ja liigub sinna.     |
-| `git switch main`             | Liigub tagasi main branch’i.           |
-| `git merge <branch-name>`     | Ühendab branch’i praegusesse branch’i. |
-
-Näide:
-
-```powershell
-git switch -c update-guides
-```
-
-Tagasi main branch’i:
+Grupirepo tavapärane algus:
 
 ```powershell
 git switch main
+git pull --ff-only
+git switch -c week-6-helen-dashboard-update
 ```
 
----
-
-# Troubleshooting
-
-## Probleem: `Repository not found`
-
-Võimalikud põhjused:
-
-* remote aadress on vale;
-* GitHubi repo on ümber nimetatud;
-* repo on privaatne ja sisselogimine ei tööta;
-* oled lokaalselt vales kaustas.
-
-Kontroll:
+Pärast PR-i merge’i:
 
 ```powershell
-git remote -v
+git switch main
+git pull --ff-only
+git branch -d week-6-helen-dashboard-update
+git fetch --prune
 ```
 
-Parandus minu isikliku repo puhul:
+## 7. Muudatuste tühistamine
+
+| Käsk | Selgitus |
+|---|---|
+| `git restore -- ".\fail.md"` | Tühistab faili commit’imata muudatused. Muudatused kaovad. |
+| `git restore --staged ".\fail.md"` | Eemaldab faili stagingust, kuid jätab muudatused töökausta alles. |
+| `git revert <commit>` | Loob uue commit’i, mis tühistab varasema commit’i. Sobib jagatud ajaloos. |
+| `git reset --soft HEAD~1` | Võtab viimase kohaliku commit’i tagasi ja jätab muudatused stagingusse. Kasuta ainult enne push’i ja teadliku otsusena. |
+
+### Vale commit’imata muudatus
 
 ```powershell
-git remote set-url origin https://github.com/HelenTanner3/daca-portfolio.git
+git diff -- ".\week-2\README.md"
+git restore -- ".\week-2\README.md"
+git status --short
 ```
 
----
-
-## Probleem: `fetch first`
-
-See tähendab, et GitHubis on muudatusi, mida minu arvutis veel ei ole.
-
-Lahendus:
+### Vale fail stagingus
 
 ```powershell
-git pull --rebase origin main
+git restore --staged ".\week-2\README.md"
+git status --short
+```
+
+### GitHubi saadetud commit’i tühistamine
+
+Kasuta jagatud ajaloos üldjuhul:
+
+```powershell
+git revert <commit-hash>
 git push
 ```
 
----
+Ära kirjuta avaliku või grupirepo ajalugu ümber juhusliku `reset --hard` ja force-push kombinatsiooniga.
 
-## Probleem: `Untracked files`
+## 8. Failide olemasolu ja nimede kontroll
 
-See tähendab, et Git näeb uusi faile, aga neid ei ole veel commit’i lisatud.
+Need on PowerShelli käsud, mitte Git-käsud.
 
-Lahendus:
+| Käsk | Selgitus |
+|---|---|
+| `Get-Location` | Näitab praegust kausta. |
+| `Get-ChildItem` | Näitab kausta sisu. |
+| `Get-ChildItem ".\kaust" -Recurse` | Näitab kausta ja alamkaustade sisu. |
+| `Test-Path ".\fail.md"` | Kontrollib, kas fail on olemas. |
+| `Get-Item ".\fail.pbix"` | Näitab faili andmeid. |
+| `Move-Item "vana" "uus"` | Nimetab faili ümber või liigutab selle. |
 
-```powershell
-git add .
-git commit -m "Add new files"
-```
-
----
-
-## Probleem: olen vales kaustas
-
-Kontrollin terminali real olevat asukohta.
-
-Õige isiklik repo:
-
-```text
-C:\Users\Helen\data-analysis-course\daca-portfolio
-```
-
-Grupirepo:
-
-```text
-C:\Users\Helen\data-analysis-course\DACA-group
-```
-
-Kui olen vales kohas, liigun õigesse kausta:
+Pärast jälgitava faili ümbernimetamist:
 
 ```powershell
-cd C:\Users\Helen\data-analysis-course\daca-portfolio
+git add -A -- ".\vajalik-kaust"
 ```
 
----
+## 9. Levinumad veateated
 
-# Quick Cheat Sheet
+### `nothing to commit, working tree clean`
 
-Kõige sagedamini kasutatavad käsud.
+Kõik muudatused on commit’itud.
 
-| Situation                    | Command                           |
-| ---------------------------- | --------------------------------- |
-| Kontrollin seisu             | `git status`                      |
-| Tõmban viimased muudatused   | `git pull --rebase origin main`   |
-| Lisan kõik muudatused        | `git add .`                       |
-| Teen commit’i                | `git commit -m "Message"`         |
-| Saadan GitHubi               | `git push`                        |
-| Vaatan remote aadressi       | `git remote -v`                   |
-| Vaatan viimaseid commit’e    | `git log --oneline --max-count=5` |
-| Eemaldan faili staging alast | `git restore --staged <file>`     |
-| Parandan remote aadressi     | `git remote set-url origin <url>` |
+### `Untracked files`
 
----
-
-# Minu soovitatud Git tööharjumus
-
-1. Alustan alati käsuga:
+Git näeb uusi faile. Lisa ainult vajalik fail või kaust:
 
 ```powershell
-git status
+git add -- ".\vajalik-kaust"
 ```
 
-2. Enne tööd või enne push’i kasutan:
+### `behind 4`
+
+Kohalik haru on GitHubist nelja commit’i võrra maas:
 
 ```powershell
-git pull --rebase origin main
+git pull --ff-only
 ```
 
-3. Commit message kirjeldab sisuliselt, mida muutsin.
+### `ahead 1`
 
-4. Enne `push` käsku kontrollin, et olen õiges repos.
-
-5. Kui Git annab vea, ei tee juhuslikke käske, vaid loen veateate läbi ja kontrollin esmalt:
+Sul on üks GitHubi saatmata kohalik commit:
 
 ```powershell
-git status
+git push
+```
+
+### `fetch first`
+
+GitHubis on uuemaid muudatusi:
+
+```powershell
+git fetch origin
+git status -sb
+```
+
+Kui tööpuu on puhas ja haru on ainult `behind`:
+
+```powershell
+git pull --ff-only
+```
+
+### `fatal: not a git repository`
+
+Oled vales kaustas.
+
+```powershell
+Get-Location
+cd "C:\Users\Helen\data-analysis-course\daca-portfolio"
+```
+
+### `Repository not found`
+
+Kontrolli remote’i ja ligipääsu:
+
+```powershell
 git remote -v
 ```
+
+### `Cannot delete branch ... not fully merged`
+
+Haru ei ole Giti arvates ühendatud. Kontrolli:
+
+```powershell
+git branch --no-merged main
+git log --oneline --all --graph --decorate -10
+```
+
+Ära kasuta `-D` valikut enne, kui oled veendunud, et ühendamata töö pole vajalik.
+
+## 10. Kiirspikker
+
+| Olukord | Käsk |
+|---|---|
+| Kontrollin seisu | `git status` |
+| Kontrollin haru | `git branch --show-current` |
+| Uuendan remote-infot | `git fetch --prune origin` |
+| Toon GitHubi muudatused alla | `git pull --ff-only` |
+| Vaatan kohalikke muudatusi | `git diff` |
+| Lisan ühe kausta | `git add -- ".\kaust"` |
+| Kontrollin stagingut | `git diff --cached --stat` |
+| Teen commit’i | `git commit -m "Message"` |
+| Saadan commit’i GitHubi | `git push` |
+| Loon grupirepo tööharu | `git switch -c <haru>` |
+| Saadan uue haru GitHubi | `git push -u origin <haru>` |
+| Eemaldan faili stagingust | `git restore --staged ".\fail"` |
+| Tühistan commit’imata muudatuse | `git restore -- ".\fail"` |
+| Puhastan remote-harude viited | `git fetch --prune origin` |
+
+## 11. Ohutu kontroll enne järgmist sammu
+
+```powershell
+Get-Location
+git branch --show-current
+git status --short
+git status -sb
+git log -3 --oneline
+```
+
+Need käsud näitavad seisu ega muuda faile.
