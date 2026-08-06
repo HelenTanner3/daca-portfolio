@@ -21,8 +21,12 @@ GUIDES/
 ├── 04_powerbi/
 │   └── power_bi_working_guide.md
 ├── 05_templates/
-└── 06_markdown_documentation/
-    └── markdown_working_guide.md
+├── 06_markdown_documentation/
+│   └── markdown_working_guide.md
+└── 07_python_pandas/
+    ├── README.md
+    ├── week7_rfm_group_workflow_learning_guide.md
+    └── jupyter_pandas_vs_supabase_sql_reference.md
 ```
 
 ## 01 Environment Setup
@@ -81,6 +85,15 @@ Planeeritud mallid:
 
 - [Markdowni praktiline tööjuhend](06_markdown_documentation/markdown_working_guide.md)
 
+
+## 07 Python & pandas
+
+- [Week 7 RFM grupitöö — analüütiline õppejuhend](07_python_pandas/week7_rfm_group_workflow_learning_guide.md)  
+  Roll A–D terviklik töövoog, kasutatud käsud, kontrollväärtused, tulemused, piirangud ja õppimiskohad.
+
+- [Jupyter / pandas vs Supabase SQL — käskude kontrolltabel](07_python_pandas/jupyter_pandas_vs_supabase_sql_reference.md)  
+  Week 7 käskude eesmärgid, SQL-vasted ja kompaktsed alternatiivid.
+
 ## Soovitatav kasutamise järjekord
 
 1. [PowerShelli põhijuhend](01_environment_setup/powershell_basics.md)
@@ -89,6 +102,8 @@ Planeeritud mallid:
 4. [Supabase → Python → pandas](03_data_access/connections/supabase_python_pandas_connection.md)
 5. [Power BI praktiline tööjuhend](04_powerbi/power_bi_working_guide.md)
 6. [Markdowni tööjuhend](06_markdown_documentation/markdown_working_guide.md)
+7. [Week 7 RFM õppejuhend](07_python_pandas/week7_rfm_group_workflow_learning_guide.md)
+8. [Jupyter / pandas vs Supabase SQL](07_python_pandas/jupyter_pandas_vs_supabase_sql_reference.md)
 
 ## Kasutamise põhimõtted
 
