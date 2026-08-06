@@ -13,4 +13,3 @@ See jaotis sisaldab Pythonil, pandas'el ja Jupyter Notebook'il põhinevaid õppe
 ## Seotud juhend
 
 - [Supabase → Python → pandas ühendus](../03_data_access/connections/supabase_python_pandas_connection.md)
-
