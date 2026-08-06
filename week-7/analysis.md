@@ -18,7 +18,7 @@ Minu ametlik roll oli **Roll C — RFM-analüüs**.
 Isiklikus portfoolios on kaks eraldi notebook'i:
 
 1. `week7_role_c_rfm_analysis.ipynb` — ametliku Roll C kood, mis eeldab Roll B loodud puhastatud DataFrame'i `df`;
-2. `week7_UrbanStyle.ltd_Python Pandas_RFM (Recency, Frequency, Monetary) Helen (roll a,b,c,d).ipynb` — iseseisvalt käivitatav õppimisnotebook, kus läbisin tervikliku A–D töövoo.
+2. `week7_full_rfm_analysis.ipynb` — iseseisvalt käivitatav õppimisnotebook, kus läbisin tervikliku A–D töövoo.
 
 Ametliku Roll C notebook'i kood vastab grupi koondnotebook'i Roll C osale. Terviklik notebook on täiendav isiklik õppimis- ja portfoolioartefakt, mitte teiste grupiliikmete töö omistamine endale.
 
@@ -261,6 +261,6 @@ Kõige olulisem metoodiline õppetund oli eristada koolituse juhendi põhivoogu 
 ## 13. Seotud artefaktid
 
 - [Ametlik Roll C notebook](week7_role_c_rfm_analysis.ipynb)
-- [Terviklik isiklik A–D õppimisnotebook](<week7_UrbanStyle.ltd_Python Pandas_RFM (Recency, Frequency, Monetary) Helen (roll a,b,c,d).ipynb>)
+- [Terviklik isiklik A–D õppimisnotebook](week7_full_rfm_analysis.ipynb)
 - [Grupi koondnotebook](https://github.com/Kolju3/DACA-group/blob/main/week-7/group/urbanstyle_operatsioonid_week7_(a_b_c_d).ipynb)
 - [Minu Roll C töö grupirepos](https://github.com/Kolju3/DACA-group/tree/main/week-7/individual/helen)
