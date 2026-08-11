@@ -79,7 +79,7 @@ AI-d kasutati õppematerjalide tõlgendamisel, pandas- ja Supabase'i koodi kontr
 ## Artefaktid
 
 - [Ametlik Roll C notebook](week7_role_c_rfm_analysis.ipynb)
-- [Terviklik isiklik A–D õppimisnotebook](week7_full_rfm_analysis.ipynb)
+- [Terviklik isiklik A–D õppimisnotebook](additional-analysis/week7_full_rfm_analysis.ipynb)
 - [Detailne analüüs](analysis.md)
 - [Grupi koondnotebook](https://github.com/Kolju3/DACA-group/blob/main/week-7/group/urbanstyle_operatsioonid_week7_(a_b_c_d).ipynb)
 - [Minu Roll C töö grupirepos](https://github.com/Kolju3/DACA-group/tree/main/week-7/individual/helen)
