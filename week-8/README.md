@@ -58,3 +58,17 @@ See kinnitas praktiliselt põhimõtet: **pipeline'i väljundit tuleb valideerida
 ## AI kasutamine
 
 Kasutasin AI-d eeskätt veaotsingu, kontrollküsimuste ja testide koostamise abivahendina. Tehnilised järeldused kinnitasin reaalse pipeline'i käivitamise, ridade arvu, unikaalsete võtmete ja KPI-de võrdlemisega.
+
+## Grupitöö lõppversioon
+
+Week 8 lõplik grupitöö on säilitatud ka isiklikus portfoolios:
+
+[Week 8 group project snapshot](group-project/)
+
+Minu roll oli Roll D - pipeline'i integratsioon ja tervikvoo valideerimine.
+
+Pipeline'i valideeritud käivitus:
+
+python pipeline.py --date 2025-03-01
+
+![Pipeline execution validation](output/pipeline_execution_validation.png)
