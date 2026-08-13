@@ -72,3 +72,13 @@ Pipeline'i valideeritud kÃ¤ivitus:
 python pipeline.py --date 2025-03-01
 
 ![Pipeline execution validation](output/pipeline_execution_validation.png)
+
+## Täiendav RFM automatiseerimine
+
+Pärast grupitöö esitlusel saadud tagasisidet lisasin Week 7 RFM-segmentatsiooni olemasolevasse Week 8 API-pipeline'i.
+
+[RFM automation](additional-analysis/rfm-automation/)
+
+Valideeritud käivitus: python pipeline.py --date 2025-03-01
+
+![RFM customer segments](additional-analysis/rfm-automation/output/rfm_segments.png)

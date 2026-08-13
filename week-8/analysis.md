@@ -182,3 +182,11 @@ KÃµige keerulisem integratsioonikoht ei olnud funktsioonide importimine, vaid si
 Kasutasin AI-d veaotsingu, testide koostamise ja kontrollloogika sÃµnastamise abivahendina. AI pakutud hÃ¼poteese ei kÃ¤sitlenud lÃµpptulemusena: pagination'i, kuupÃ¤evafiltri ja puhastuse tulemused kinnitasin eraldi kÃ¤ivituste, unikaalsuskontrollide ja KPI-de vÃµrdlemisega.
 
 KÃµige olulisem Ãµppetund: **tÃ¶Ã¶tav kood ei ole veel tÃµend Ãµigest tulemusest â€” vaja on referentsvÃ¤Ã¤rtusi ja ristkontrolle.**
+
+## RFM automatiseerimise täiendus
+
+Pärast Week 8 grupitöö esitlust lisasin täiendava analüüsina Week 7 RFM-segmentatsiooni olemasolevasse API-pipeline'i.
+
+Sama --date väärtus juhib nii API lõppkuupäeva kui ka RFM viitekuupäeva. Valideeritud jooksus oli 8 923 puhastatud müügirida, 2 540 RFM klienti ja 0 negatiivset Recency väärtust.
+
+Täienduse detailid ja väljundid: additional-analysis/rfm-automation/.
