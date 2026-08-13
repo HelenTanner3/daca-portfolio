@@ -2,83 +2,43 @@
 
 ## Eesmärk
 
-Nädal 8 keskendus varasema käsitsi tehtava andmetöötluse ühendamisele üheks automatiseeritud pipeline'iks: andmete laadimine → puhastamine ja koondamine → visualiseerimine → eksport.
+Nädal 8 eesmärk oli ühendada andmete pärimine, töötlemine, visualiseerimine ja eksport üheks korduvkasutatavaks Python-pipeline'iks. Nädal 7 ühekordsest pandas-analüüsist liikus töö edasi API-põhise ja ühe käsuga käivitatava töövoo suunas.
 
-Minu roll oli **Roll D — Automation Script**. Ülesanne oli ühendada Rollide A, B ja C moodulid `pipeline.py` abil üheks järjestikuseks töövooks, lisada logimine ja veakäsitlus ning kontrollida, et kogu protsess töötab ühe käsuga.
+## Minu roll
 
-## Minu artefakt
+Minu ametlik roll oli **Roll D — Automation Script (automatiseerimise skript)**.
 
-- [`pipeline.py`](./pipeline.py) — Roll D lõplik orkestreeriv skript
-- [`analysis.md`](./analysis.md) — detailsem töö- ja valideerimiskokkuvõte
-- [`output/`](./output/) — valideeritud lõppväljundid
-- [`additional-analysis/abc-integration-test/`](./additional-analysis/abc-integration-test/) — õppimise käigus loodud diagnostiline A→B→C→D integratsioonitest
+Minu ülesanne oli:
+- ühendada Rollide A, B ja C funktsioonid `pipeline.py` abil õigesse järjekorda;
+- anda kuupäevaparameeter edasi andmelaadimisele;
+- lisada logimine, veakäsitlus ja täitmisaja mõõtmine;
+- kontrollida, et A → B → C → D töövoog jõuab ühe käsuga andmete pärimisest väljundfailideni.
 
-Tervikpipeline kasutab grupi mooduleid `data_fetcher.py`, `transform.py` ja `visualize_export.py`.
+## Peamised tulemused
 
-[Grupi Week 8 töö](https://github.com/Kolju3/DACA-group/tree/main/week-8/group)
+- Kuupäevapiiranguga valideeritud jooksus saadi API-st **10 086 müügirida** ning kõik `id` ja `sale_id` väärtused olid unikaalsed.
+- Pärast puhastamist jäi **8 923 analüüsikõlblikku müügirida**.
+- Valideeritud KPI-d olid **2 669 027,39 € kogukäivet**, **2 540 unikaalset klienti** ja **299,12 € keskmine ostusumma**.
+- Integratsioonikontroll paljastas pagination'i vea: esialgses 10 086 reas oli ainult 10 026 unikaalset kirjet. Stabiilne järjestus `order("id")` kõrvaldas 60 duplikaadi ja 60 puuduva rea probleemi.
 
-## Käivitamine
+## Järeldus
 
-Kogu andmestik:
+Nädala peamine õppetund oli, et automatiseeritud töövoo edukas käivitumine ei tõenda veel tulemuse korrektsust. Pipeline'i tuleb valideerida ridade arvu, võtmete unikaalsuse, puhastamise mõju ja referents-KPI-de abil.
 
-```powershell
-python pipeline.py
-```
+Praegune lahendus automatiseerib kogu A → B → C → D töövoo ühe käsu alla, kuid ei ole veel välise scheduler'iga automaatselt ajastatud.
 
-Kuupäevapiiranguga:
+## Kasutatud oskused ja tööriistad
 
-```powershell
-python pipeline.py --date 2025-03-01
-```
-
-Kasutatud loogikas tähendab `--date 2025-03-01`, et müügid võetakse **enne 01.03.2025**, s.t kuni 28.02.2025.
-
-## Valideeritud tulemus
-
-| Kontroll | Tulemus |
-|---|---:|
-| Müügiridu pärast API filtrit | 10 086 |
-| Unikaalseid `id` väärtusi | 10 086 |
-| Unikaalseid `sale_id` väärtusi | 10 086 |
-| Duplikaate `id` / `sale_id` järgi | 0 |
-| Puhastatud ridu | 8 923 |
-| Nädalaid | 114 |
-| Kogukäive | 2 669 027,39 € |
-| Unikaalseid kliente | 2 540 |
-| Keskmine ostusumma | 299,12 € |
-
-Pipeline tekitas CSV-väljundi ning kaks interaktiivset Plotly HTML-visualiseeringut.
-
-## Oluline kvaliteedikontroll
-
-Integratsioonitestis selgus, et ainult edukast API vastusest ei piisa. Kuupäevafiltriga päring tagastas algselt küll 10 086 rida, kuid neist ainult 10 026 olid unikaalsed. Stabiilse järjestuse lisamine offset-pagination'ile (`order("id")`) kõrvaldas 60 duplikaati ja 60 puuduoleva rea probleemi.
-
-See kinnitas praktiliselt põhimõtet: **pipeline'i väljundit tuleb valideerida referentsväärtuste ja unikaalsuskontrollidega, mitte ainult selle järgi, kas kood jookseb veata.**
+Python, pandas, Supabase API, Plotly, funktsioonid ja moodulid, ETL-pipeline, pagination, logimine, `try/except`, käsureaparameetrid, andmekvaliteedi kontroll ja Git/GitHub.
 
 ## AI kasutamine
 
-Kasutasin AI-d eeskätt veaotsingu, kontrollküsimuste ja testide koostamise abivahendina. Tehnilised järeldused kinnitasin reaalse pipeline'i käivitamise, ridade arvu, unikaalsete võtmete ja KPI-de võrdlemisega.
+Kasutasin AI-d eeskätt veaotsingu, kontrollloogika ja testide koostamise abivahendina. AI pakutud hüpoteese kontrollisin reaalse pipeline'i käivitamise, ridade arvu, võtmete unikaalsuse, puhastamise mõju ja KPI-de võrdlemisega.
 
-## Grupitöö lõppversioon
+## Artefaktid
 
-Week 8 lõplik grupitöö on säilitatud ka isiklikus portfoolios:
-
-[Week 8 group project snapshot](group-project/)
-
-Minu roll oli Roll D - pipeline'i integratsioon ja tervikvoo valideerimine.
-
-Pipeline'i valideeritud käivitus:
-
-python pipeline.py --date 2025-03-01
-
-![Pipeline execution validation](output/pipeline_execution_validation.png)
-
-## T�iendav RFM automatiseerimine
-
-P�rast grupit�� esitlusel saadud tagasisidet lisasin Week 7 RFM-segmentatsiooni olemasolevasse Week 8 API-pipeline'i.
-
-[RFM automation](additional-analysis/rfm-automation/)
-
-Valideeritud k�ivitus: python pipeline.py --date 2025-03-01
-
-![RFM customer segments](additional-analysis/rfm-automation/output/rfm_segments.png)
+- [`pipeline.py`](pipeline.py) — minu ametliku Roll D põhiartefakt
+- [`analysis.md`](analysis.md) — detailne tööprotsess, valideerimine, piirangud ja õppetunnid
+- [`output/`](output/) — isikliku valideerimise väljundid
+- [`group-project/`](group-project/) — lõpliku grupitöö koopia koos lähtecommit'i ja grupi originaalse README-ga
+- [`additional-analysis/`](additional-analysis/) — diagnostiline A–B–C integratsioonitest ja hilisem RFM automatiseerimise edasiarendus
