@@ -1,34 +1,34 @@
-﻿# Week 8 Group Project Snapshot
+﻿# Nädal 8 grupitöö lõppversioon
 
-This folder preserves the final Week 8 collaborative project as part of the personal portfolio.
+See kaust säilitab Nädal 8 lõpliku grupitöö koopiana minu isiklikus portfoolios.
 
-## Team roles
+## Meeskonna rollid
 
-- Role A - Kalju: API data extraction
-- Role B - Natalia: data transformation and cleaning
-- Role C - Olga: visualization and export
-- Role D - Helen: pipeline integration and end-to-end validation
+- **Roll A - Kalju:** API andmete laadimine
+- **Roll B - Natalia:** andmete töötlemine ja puhastamine
+- **Roll C - Olga:** visualiseerimine ja eksport
+- **Roll D - Helen:** pipeline'i integratsioon ja tervikvoo valideerimine
 
-## Source
+## Allikas
 
-Original repository: https://github.com/Kolju3/DACA-group
-Source commit: 65519d0008b1c229555384531350b6aff10be648
+Algne grupirepo: https://github.com/Kolju3/DACA-group
+Lähtecommit: 65519d0008b1c229555384531350b6aff10be648
 
-The original group README is preserved as GROUP_README.md.
+Grupi algne README on säilitatud failina GROUP_README.md.
 
-## Main files
+## Põhifailid
 
-- data_fetcher.py - Supabase API data extraction
-- transform.py - merge, cleaning, aggregation and KPI calculation
-- visualize_export.py - visualization and export
-- pipeline.py - end-to-end pipeline orchestration
+- data_fetcher.py - Supabase API andmete laadimine
+- transform.py - andmete ühendamine, puhastamine, koondamine ja KPI-de arvutamine
+- visualize_export.py - visualiseerimine ja tulemuste eksport
+- pipeline.py - kogu töövoo ühendamine üheks pipeline'iks
 
-## Validation
+## Valideerimine
 
-The complete pipeline was validated with:
+Tervikpipeline valideeriti käsuga:
 
 python pipeline.py --date 2025-03-01
 
 ![Pipeline execution validation](output/pipeline_execution_validation.png)
 
-This snapshot preserves the final collaborative project independently of the original group repository.
+Snapshot on lisatud isiklikku portfooliosse, et säilitada lõplik grupitöö sõltumatult algsest grupirepost.
