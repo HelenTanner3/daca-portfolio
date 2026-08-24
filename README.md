@@ -21,7 +21,7 @@ Fookus on andmete muutmisel usaldusväärseks juhtimisinfoks: lisaks analüüsil
 | [Nädal 6](week-6/) | Visualiseerimise andmelugu | Tartu kaupluse dashboard ja juhtimisnarratiiv | Valmis |
 | [Nädal 7](week-7/) | Python ja pandas | RFM-kliendisegmenteerimine ning täiendavad tervikläbimised | Valmis |
 | [Nädal 8](week-8/) | Python API-d ja automatiseerimine | Modulaarne API-pipeline, integratsiooni valideerimine ja RFM automatiseerimine | Valmis |
-| Nädal 9 | Karjääriks valmistumine | CV, LinkedIn ja portfoolio viimistlemine | Tulemas |
+| [Nädal 9](week-9/) | Karjääriks valmistumine | CV, LinkedIn ja portfoolio viimistlemine | Valmis |
 | Nädal 10 | Portfoolio kaitsmine | Tervikportfoolio ja lõpuesitlus | Tulemas |
 
 ## Tööviis
