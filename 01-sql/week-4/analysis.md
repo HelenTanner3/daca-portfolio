@@ -236,9 +236,9 @@ Täieliku `sales` koondi põhjal:
 | 2025 | 691 | 199 968,69 € |
 | 2026 | 16 | 4 092,37 € |
 
-2024. aastal kasvas tellimuste arv **20,19%** ja käive **19,08%** võrreldes 2023. aastaga. 2024. aasta suurima käibega kuu oli detsember: **170 623,28 €**.
+2024\. aastal kasvas tellimuste arv **20,19%** ja käive **19,08%** võrreldes 2023. aastaga. 2024. aasta suurima käibega kuu oli detsember: **170 623,28 €**.
 
-2025. ja 2026. aasta tulemusi ei käsitleta täieliku aastatrendina, sest perioodide andmekate on ebaühtlane.
+2025\. ja 2026. aasta tulemusi ei käsitleta täieliku aastatrendina, sest perioodide andmekate on ebaühtlane.
 
 Kanalipõhises ajalises analüüsis ilmnes 2024. aasta lõpus tugev kõikumine. Analüüsi esitlusversioonis kasvas `google_organic` käive novembrist detsembrini 142,7%.
 

@@ -191,7 +191,7 @@ Tühja linnaväärtust ei filtreeritud välja, sest sellega seotud müük moodus
 
 - KPI-kaardid paiknevad vaate ülaosas.
 - Peamine visuaal võrdleb 2023. ja 2024. aasta müügitulu kuude lõikes.
-- 2024. aasta on rõhutatud teal-tooniga ning 2023. aasta on neutraalne võrdlusbaas.
+- 2024\. aasta on rõhutatud teal-tooniga ning 2023. aasta on neutraalne võrdlusbaas.
 - Telgede ja joonte skaalad on seadistatud nii, et trendi ei võimendataks eksitavalt.
 - Värv ei ole ainus eristusviis: aastad on tähistatud ka teksti, joone stiili või legendiga.
 - Linnaslicer võimaldab kontrollida piirkondlikke erinevusi.
@@ -255,7 +255,7 @@ Dashboard’ide filtrid võimaldavad analüüsida tulemusi:
 
 Kontrollisin mõõdikuid Power BI tabelivaadetes ja võrdlesin neid teadaolevate koondväärtustega. Eraldi kontrollisin:
 
-- 2023. ja 2024. aasta müügitulu;
+- 2023\. ja 2024. aasta müügitulu;
 - ostnud klientide arvu;
 - määramata linnaga müüki;
 - uute ostnud klientide välistamist ostuta klientidest;
