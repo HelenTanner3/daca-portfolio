@@ -15,33 +15,47 @@ Fookus on andmete muutmisel usaldusväärseks juhtimisinfoks: lisaks analüüsil
 
 | Nädal | Teema | Minu töö | Staatus |
 |---|---|---|---|
-| [Nädal 0](week-0/) | Töökeskkond ja GitHub | Arenduskeskkonna ja Git-töövoo seadistamine | :white_check_mark: |
-| [Nädal 1](week-1/) | SQL alused | Müügiandmete uurimine | :white_check_mark: |
-| [Nädal 2](week-2/) | SQL puhastamine | Kliendiandmete puhastamine | :white_check_mark: |
-| [Nädal 3](week-3/) | SQL JOIN-id | Toodete ja inventuuri analüüs | :white_check_mark: |
-| [Nädal 4](week-4/) | SQL agregatsioon | Turunduskanalite efektiivsuse analüüs ja JOIN-i kontroll | :white_check_mark: |
-| [Nädal 5](week-5/) | Visualiseerimise disain | CEO müügidashboard ja täiendav turundusvaade Power BI-s | :white_check_mark: |
-| [Nädal 6](week-6/) | Visualiseerimise andmelugu | Tartu kaupluse dashboard ja juhtimisnarratiiv | :white_check_mark: |
-| [Nädal 7](week-7/) | Python ja pandas | RFM-kliendisegmenteerimine ning täiendavad tervikläbimised | :white_check_mark: |
-| [Nädal 8](week-8/) | Python API-d ja automatiseerimine | Modulaarne API-pipeline, integratsiooni valideerimine ja RFM automatiseerimine | :white_check_mark: |
-| [Nädal 9](week-9/) | Karjääriks valmistumine | CV, LinkedIn ja portfoolio viimistlemine | :white_check_mark: |
-| [Nädal 10](week-10/) | Portfoolio kaitsmine | Tervikportfoolio ja lõpuesitlus | :arrows_counterclockwise: Töös |
+| [Nädal 0](00-setup/week-0/) | Töökeskkond ja GitHub | Arenduskeskkonna ja Git-töövoo seadistamine | :white_check_mark: |
+| [Nädal 1](01-sql/week-1/) | SQL alused | Müügiandmete uurimine | :white_check_mark: |
+| [Nädal 2](01-sql/week-2/) | SQL puhastamine | Kliendiandmete puhastamine | :white_check_mark: |
+| [Nädal 3](01-sql/week-3/) | SQL JOIN-id | Toodete ja inventuuri analüüs | :white_check_mark: |
+| [Nädal 4](01-sql/week-4/) | SQL agregatsioon | Turunduskanalite efektiivsuse analüüs ja JOIN-i kontroll | :white_check_mark: |
+| [Nädal 5](02-power-bi/week-5/) | Visualiseerimise disain | CEO müügidashboard ja täiendav turundusvaade Power BI-s | :white_check_mark: |
+| [Nädal 6](02-power-bi/week-6/) | Visualiseerimise andmelugu | Tartu kaupluse dashboard ja juhtimisnarratiiv | :white_check_mark: |
+| [Nädal 7](03-python/week-7/) | Python ja pandas | RFM-kliendisegmenteerimine ning täiendavad tervikläbimised | :white_check_mark: |
+| [Nädal 8](03-python/week-8/) | Python API-d ja automatiseerimine | Modulaarne API-pipeline, integratsiooni valideerimine ja RFM automatiseerimine | :white_check_mark: |
+| [Nädal 9](04-career/week-9/) | Karjääriks valmistumine | CV, LinkedIn ja portfoolio viimistlemine | :white_check_mark: |
+| [Nädal 10](05-portfolio-presentation/week-10/) | Portfoolio kaitsmine | Tervikportfoolio ja lõpuesitlus | :arrows_counterclockwise: Töös |
 
 ## 📁 Repo ülesehitus
 
-Portfoolio on korraldatud nädalapõhiste projektidena. Nädalate kaustad on lingitud ülaltoodud projektide tabelis ning analüüsinädalatel kasutatakse võimaluse korral ühtset dokumentatsiooniloogikat:
+Portfoolio on jaotatud tehnoloogia- ja tööetappide kaupa. Iga teemakausta sees säilib nädalapõhine õpiteekond.
+
+```text
+daca-portfolio/
+├── 00-setup/                   # Nädal 0
+├── 01-sql/                     # Nädalad 1–4
+├── 02-power-bi/                # Nädalad 5–6
+├── 03-python/                  # Nädalad 7–8
+├── 04-career/                  # Nädal 9
+└── 05-portfolio-presentation/  # Nädal 10
+```
+
+Nädalakaustade dokumentatsioon järgib võimaluse korral ühtset loogikat:
 
 ```text
 week-x/
 ├── README.md
-├── analysis.md
-├── põhiartefakt (.sql / .ipynb / .py / .pbix)
-├── screenshots/
-├── additional-analysis/   # vajaduse korral
-└── supporting/            # vajaduse korral
+├── analysis.md             # analüüsinädalatel
+├── põhiartefakt            # .sql / .ipynb / .py / .pbix / .pptx / .pdf
+├── screenshots/            # .png / .jpg / .html
+├── additional-analysis/    # vajaduse korral
+└── supporting/             # vajaduse korral
 ```
 
-`README.md` annab projektist lühikese ülevaate, `analysis.md` sisaldab detailsemat analüüsi, kontrolle ja järeldusi ning põhiartefakt näitab tehtud tehnilist tööd. Kuvatõmmised ja täiendavad materjalid lisatakse ainult siis, kui need toetavad projekti mõistmist või tulemuste tõendamist.
+Nädal 0 on seadistuste nädal ja Nädal 10 portfoolio esitlus, mistõttu nende dokumentatsioon võib tavapärasest analüüsinädala struktuurist erineda.
+
+`README.md` annab projektist lühikese ülevaate, `analysis.md` sisaldab analüüsinädalatel detailsemat analüüsi, kontrolle ja järeldusi ning põhiartefakt näitab tehtud tehnilist tööd. Kuvatõmmised ja täiendavad materjalid lisatakse siis, kui need toetavad projekti mõistmist või tulemuste tõendamist.
 
 ## 🔍 Tööviis ja kvaliteedikontroll
 

@@ -20,9 +20,9 @@ CV-s kasutasin DACA projekte tõenditena, mitte lihtsalt oskuste loeteluna. Näi
 - Python/API töövoog näitab andmete laadimise, pipeline'i ja kontrollpunktide mõistmist.
 
 Kvantifitseeritud tulemused pärinevad varasemate nädalate kontrollitud artefaktidest. Detailsemad tõendid on vastavates nädala kaustades:
-- [Nädal 6 — Power BI](../week-6/)
-- [Nädal 7 — RFM analüüs](../week-7/)
-- [Nädal 8 — Python ja API](../week-8/)
+- [Nädal 6 — Power BI](../../02-power-bi/week-6/)
+- [Nädal 7 — RFM analüüs](../../03-python/week-7/)
+- [Nädal 8 — Python ja API](../../03-python/week-8/)
 
 ## 3. LinkedIn ja projektide valik
 
