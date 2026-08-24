@@ -19,7 +19,7 @@ Meeskonnaliikmed jagasid omavahel GitHubi, Supabase’i, NotebookLM-i ja Team Ch
 
 Minu põhiülesanne oli koostada Operations Intelligence’i meeskonna Team Charter.
 
-Töö käigus:git diff -- ".\week-0\README.md"
+Töö käigus:
 
 - koondasin meeskonna töökorralduse ja koostööpõhimõtted;
 - dokumenteerisin suhtluskanalid ja kokkulepped;
