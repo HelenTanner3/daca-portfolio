@@ -25,7 +25,7 @@ Fookus on andmete muutmisel usaldusväärseks juhtimisinfoks: lisaks analüüsil
 | [Nädal 7](03-python/week-7/) | Python ja pandas | RFM-kliendisegmenteerimine ning täiendavad tervikläbimised | :white_check_mark: |
 | [Nädal 8](03-python/week-8/) | Python API-d ja automatiseerimine | Modulaarne API-pipeline, integratsiooni valideerimine ja RFM automatiseerimine | :white_check_mark: |
 | [Nädal 9](04-career/week-9/) | Karjääriks valmistumine | CV, LinkedIn ja portfoolio viimistlemine | :white_check_mark: |
-| [Nädal 10](05-portfolio-presentation/week-10/) | Portfoolio kaitsmine | Tervikportfoolio ja lõpuesitlus | :arrows_counterclockwise: Töös |
+| [Nädal 10](05-portfolio-presentation/week-10/) | Portfoolio kaitsmine | Tervikportfoolio ja lõpuesitlus | :white_check_mark:  |
 
 ## 📁 Repo ülesehitus
 
